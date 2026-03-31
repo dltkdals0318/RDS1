@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <!--
   © Provided by Prof. Yuseon Park
   Hongik University, Design Research Studio, 2026
@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-
     <header>
       <h1 id="site-title"></h1>
       <p id="site-desc"></p>
@@ -27,21 +26,20 @@
     </section>
 
     <script>
-      const SPREADSHEET_ID = "여기에_ID_붙여넣기";
+      const SPREADSHEET_ID = "1XWZN3TFyXQqLclqn7RqdmaaeEeoAmapN";
 
       const KEYS = {
-        title:       "Meta-Title",
+        title: "Meta-Title",
         description: "Meta-Description",
-        about:       "About",
-        project:     "UL-Project",
-        date:        "UL-Date",
-        location:    "UL-Location",
-        note:        "UL-Note",
-        image:       "UL-Images",
+        about: "About",
+        project: "UL-Project",
+        date: "UL-Date",
+        location: "UL-Location",
+        note: "UL-Note",
+        image: "UL-Images",
       };
 
-      const CSV_URL =
-        `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/export?format=csv`;
+      const CSV_URL = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/export?format=csv`;
 
       function parseCSV(text) {
         const lines = text.trim().split("\n");
@@ -85,9 +83,12 @@
           const first = rows[0] || {};
 
           // 메타 정보
-          document.getElementById("site-title").textContent = first[KEYS.title]       || "";
-          document.getElementById("site-desc").textContent  = first[KEYS.description] || "";
-          document.getElementById("about-text").textContent = first[KEYS.about]       || "";
+          document.getElementById("site-title").textContent =
+            first[KEYS.title] || "";
+          document.getElementById("site-desc").textContent =
+            first[KEYS.description] || "";
+          document.getElementById("about-text").textContent =
+            first[KEYS.about] || "";
           document.title = first[KEYS.title] || "";
 
           const grid = document.getElementById("grid");
@@ -100,8 +101,8 @@
 
             if (row[KEYS.image]) {
               const img = document.createElement("img");
-              img.src     = row[KEYS.image];
-              img.alt     = row[KEYS.project];
+              img.src = row[KEYS.image];
+              img.alt = row[KEYS.project];
               img.loading = "lazy";
               card.appendChild(img);
             }
@@ -109,11 +110,11 @@
             const body = document.createElement("div");
             body.className = "card-body";
 
-            const year     = row[KEYS.date]
+            const year = row[KEYS.date]
               ? Math.floor(Number(row[KEYS.date])) || row[KEYS.date]
               : "";
             const location = row[KEYS.location] || "";
-            const note     = row[KEYS.note]     || "";
+            const note = row[KEYS.note] || "";
 
             body.innerHTML = `
               <p class="project-name">${row[KEYS.project]}</p>
@@ -127,8 +128,7 @@
         })
         .catch((err) => {
           console.error("Error:", err);
-          document.getElementById("grid").innerHTML =
-            `<p style="color:red">
+          document.getElementById("grid").innerHTML = `<p style="color:red">
               Failed to load data.<br>
               ① Check sharing settings — set to "Anyone with the link (Viewer)"<br>
               ② Check Spreadsheet ID<br>
