@@ -1,0 +1,32 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+::selection {
+  background: rgb(165, 163, 182);
+  color: rgb(237, 241, 225);
+}
+
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css");
+
+:root {
+  --bg: #e9e9e9;
+  --surface: #fafaf7;
+  --border: #bababa;
+  --text-0: #0f0f0f;
+  --text-1: #4f4f4f;
+  --text-2: #989898;
+  --radius: 6px;
+}
+
+body {
+  font-family: "Pretendard", "Noto Sans KR", sans-serif;
+  background: var(--bg);
+  color: var(--text-0);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
