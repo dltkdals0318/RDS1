@@ -105,6 +105,12 @@ fetch(CSV_URL)
     ];
     buildCatColorMap(uniqueCats);
 
+    document.querySelectorAll(".info-cat-badge").forEach((el) => {
+      const c = catColor(el.dataset.cat);
+      el.style.background = c.bg;
+      el.style.color = c.text;
+    });
+
     let cardIndex = 0;
     rows.forEach((row) => {
       if (!row[KEYS.project]) return;
