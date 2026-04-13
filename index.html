@@ -8,135 +8,210 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Eyes on the Road</title>
+    <title>Archive of Has-Beens</title>
     <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="css/global.css" />
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
-    <header>
-      <h1 id="site-title"></h1>
-      <p id="site-desc"></p>
-    </header>
-
-    <section class="about">
-      <p id="about-text"></p>
-    </section>
-
-    <nav class="filter-bar">
-      <button class="filter-pill active" id="filter-all">전체</button>
-      <div class="filter-group" id="filter-group-cat"></div>
-      <div class="filter-group sort-group">
-        <span class="sort-label">수치</span>
+    <!-- navigator -->
+    <nav class="top-nav">
+      <a href="#/" class="nav-logo">Archive of Has-Beens</a>
+      <div class="nav-right">
+        <a href="#/archive" class="nav-link">전체보기</a>
         <button
-          class="filter-pill sort-pill"
-          data-sort="calc-desc"
-          title="높은순"
+          class="info-btn"
+          id="info-btn"
+          aria-label="한물감 수치 정의 보기"
         >
-          ↑
-        </button>
-        <button
-          class="filter-pill sort-pill"
-          data-sort="calc-asc"
-          title="낮은순"
-        >
-          ↓
-        </button>
-        <span class="sort-label">날짜</span>
-        <button
-          class="filter-pill sort-pill"
-          data-sort="date-desc"
-          title="최신순"
-        >
-          ↑
-        </button>
-        <button
-          class="filter-pill sort-pill"
-          data-sort="date-asc"
-          title="오래된순"
-        >
-          ↓
+          info
         </button>
       </div>
     </nav>
 
-    <section class="works">
-      <div id="grid"></div>
+    <!-- swipe -->
+    <section id="view-swipe" class="view">
+      <div class="swipe-row">
+        <button class="swipe-arrow arrow-left" id="btn-dispose" title="처분">
+          &lt;
+        </button>
+        <div class="swipe-area">
+          <div class="swipe-deck" id="swipe-deck"></div>
+          <div class="swipe-labels" id="swipe-labels">
+            <span class="swipe-label label-dispose" id="label-dispose"
+              >처분</span
+            >
+            <span class="swipe-label label-preserve" id="label-preserve"
+              >보존</span
+            >
+          </div>
+        </div>
+        <button class="swipe-arrow arrow-right" id="btn-preserve" title="보존">
+          &gt;
+        </button>
+      </div>
+      <div class="swipe-bottom">
+        <p class="swipe-counter" id="swipe-counter"></p>
+        <a href="#/archive" class="see-all-cta" id="see-all-cta" hidden
+          >전체 아카이브 보기 →</a
+        >
+      </div>
     </section>
 
-    <!-- 한물감 수치 정의 버튼 -->
-    <button class="info-btn" id="info-btn" aria-label="한물감 수치 정의 보기">?</button>
-
-    <!-- 한물감 수치 정의 팝업 -->
-    <div class="info-overlay" id="info-overlay" hidden>
-      <div class="info-modal" role="dialog" aria-modal="true" aria-labelledby="info-modal-title">
-        <button class="info-close" id="info-close" aria-label="닫기">×</button>
-
-        <h2 class="info-title" id="info-modal-title">한물감의 수치 정의</h2>
-
-        <div class="info-formula">
-          하강폭(T+6) = (최고점 − T+6개월값) ÷ 최고점 × 100 &nbsp;<strong>≥ 75%</strong>
+    <!-- archive -->
+    <section id="view-archive" class="view" hidden>
+      <nav class="filter-bar">
+        <button class="filter-pill active" id="filter-all">전체</button>
+        <div class="filter-group" id="filter-group-cat"></div>
+        <div class="filter-group sort-group">
+          <span class="sort-label">수치</span>
+          <button
+            class="filter-pill sort-pill"
+            data-sort="calc-desc"
+            title="높은순"
+          >
+            ↑
+          </button>
+          <button
+            class="filter-pill sort-pill"
+            data-sort="calc-asc"
+            title="낮은순"
+          >
+            ↓
+          </button>
+          <span class="sort-label">날짜</span>
+          <button
+            class="filter-pill sort-pill"
+            data-sort="date-desc"
+            title="최신순"
+          >
+            ↑
+          </button>
+          <button
+            class="filter-pill sort-pill"
+            data-sort="date-asc"
+            title="오래된순"
+          >
+            ↓
+          </button>
         </div>
+      </nav>
+      <section class="works">
+        <div id="grid"></div>
+      </section>
+    </section>
 
+    <!-- detail view -->
+    <section id="view-detail" class="view" hidden>
+      <div class="cert-wrap">
+        <button class="cert-back" id="cert-back">← 뒤로</button>
+        <article id="death-cert"></article>
+      </div>
+    </section>
+
+    <!-- info -->
+    <div class="info-overlay" id="info-overlay" hidden>
+      <div
+        class="info-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="info-modal-title"
+      >
+        <button class="info-close" id="info-close" aria-label="닫기">×</button>
+        <h2 class="info-title" id="info-modal-title">한물감의 수치 정의</h2>
+        <div class="info-formula">
+          하강폭(T+6) = (최고점 − T+6개월값) ÷ 최고점 × 100 &nbsp;<strong
+            >≥ 75%</strong
+          >
+        </div>
         <p class="info-body">
-          구글 트렌드는 최고점을 100으로 상대화한 수치를 제공하므로 절대적 검색량과 무관하게 그래프가 나타난다. 다만 검색량 감소만으로는 유행이 식은 것인지 계절성 때문인지 구분하기 어렵기 때문에, 최고점 이후 6개월 시점에서 75% 이상 하강했을 때 유행이 종료됐다고 판단한다.
+          구글 트렌드는 최고점을 100으로 상대화한 수치를 제공하므로 절대적
+          검색량과 무관하게 그래프가 나타난다. 다만 검색량 감소만으로는 유행이
+          식은 것인지 계절성 때문인지 구분하기 어렵기 때문에, 최고점 이후 6개월
+          시점에서 75% 이상 하강했을 때 유행이 종료됐다고 판단한다.
         </p>
         <p class="info-body">
-          75%는 탕후루, 달고나커피, 아무노래 등 누구나 한물갔다고 공감하는 사례들의 실제 하강폭에서 귀납적으로 도출한 수치다. 이는 박노순(2023)이 구글 트렌드 그래프를 산모형(山型)과 파동형(波型)으로 분류하며 산모형을 "특정 시점에 피크를 형성한 뒤 급격히 하강하는 패턴"으로 정의한 것과 일치한다.
+          75%는 탕후루, 달고나커피, 아무노래 등 누구나 한물갔다고 공감하는
+          사례들의 실제 하강폭에서 귀납적으로 도출한 수치다. 이는 박노순(2023)이
+          구글 트렌드 그래프를 산모형(山型)과 파동형(波型)으로 분류하며 산모형을
+          "특정 시점에 피크를 형성한 뒤 급격히 하강하는 패턴"으로 정의한 것과
+          일치한다.
         </p>
-
         <div class="info-legend">
           <div class="info-legend-item">
-            <span class="info-badge" style="background:#9a9a9a;color:#f3f3f3">한물감</span>
+            <span class="info-badge" style="background: #9a9a9a; color: #f3f3f3"
+              >한물감</span
+            >
             <span>: 하강폭 ≥ 75%</span>
           </div>
           <div class="info-legend-item">
-            <span class="info-badge" style="background:#e3e3e3;color:#9a9a9a">한물가는 중</span>
+            <span class="info-badge" style="background: #e3e3e3; color: #9a9a9a"
+              >한물가는 중</span
+            >
             <span>: 하강폭 &lt; 75%</span>
           </div>
         </div>
-
         <div class="info-divider"></div>
-
         <p class="info-body">카테고리는 다음과 같다.</p>
         <div class="info-cat-list">
-          <span class="info-badge info-cat-badge" data-cat="음식·음료">음식·음료</span>
-          <span class="info-badge info-cat-badge" data-cat="패션·뷰티">패션·뷰티</span>
-          <span class="info-badge info-cat-badge" data-cat="밈·슬랭">밈·슬랭</span>
-          <span class="info-badge info-cat-badge" data-cat="챌린지">챌린지</span>
-          <span class="info-badge info-cat-badge" data-cat="제품·굿즈">제품·굿즈</span>
-          <span class="info-badge info-cat-badge" data-cat="기술·경제">기술·경제</span>
-          <span class="info-badge info-cat-badge" data-cat="라이프스타일">라이프스타일</span>
-          <span class="info-badge info-cat-badge" data-cat="콘텐츠">콘텐츠</span>
+          <span class="info-badge info-cat-badge" data-cat="음식·음료"
+            >음식·음료</span
+          >
+          <span class="info-badge info-cat-badge" data-cat="패션·뷰티"
+            >패션·뷰티</span
+          >
+          <span class="info-badge info-cat-badge" data-cat="밈·슬랭"
+            >밈·슬랭</span
+          >
+          <span class="info-badge info-cat-badge" data-cat="챌린지"
+            >챌린지</span
+          >
+          <span class="info-badge info-cat-badge" data-cat="제품·굿즈"
+            >제품·굿즈</span
+          >
+          <span class="info-badge info-cat-badge" data-cat="기술·경제"
+            >기술·경제</span
+          >
+          <span class="info-badge info-cat-badge" data-cat="라이프스타일"
+            >라이프스타일</span
+          >
+          <span class="info-badge info-cat-badge" data-cat="콘텐츠"
+            >콘텐츠</span
+          >
         </div>
         <p class="info-body">
-          밈을 하나의 카테고리로 쓰지 않은 이유는, 밈이 내용이 아니라 전파 방식을 가리키는 개념이라 다른 카테고리들을 계속 흡수하는 문제가 생기기 때문이다.
+          밈을 하나의 카테고리로 쓰지 않은 이유는, 밈이 내용이 아니라 전파
+          방식을 가리키는 개념이라 다른 카테고리들을 계속 흡수하는 문제가 생기기
+          때문이다.
         </p>
       </div>
     </div>
 
     <script src="js/main.js" defer></script>
     <script>
-      const infoBtn = document.getElementById('info-btn');
-      const infoOverlay = document.getElementById('info-overlay');
-      const infoClose = document.getElementById('info-close');
-
-      infoBtn.addEventListener('click', () => {
-        infoOverlay.hidden = false;
-        document.body.style.overflow = 'hidden';
-      });
+      const infoBtn = document.getElementById("info-btn");
+      const infoOverlay = document.getElementById("info-overlay");
+      const infoClose = document.getElementById("info-close");
 
       function closeModal() {
         infoOverlay.hidden = true;
-        document.body.style.overflow = '';
+        document.body.style.overflow = "";
       }
-
-      infoClose.addEventListener('click', closeModal);
-      infoOverlay.addEventListener('click', (e) => {
+      infoBtn.addEventListener("click", () => {
+        infoOverlay.hidden = false;
+        document.body.style.overflow = "hidden";
+      });
+      infoClose.addEventListener("click", closeModal);
+      infoOverlay.addEventListener("click", (e) => {
         if (e.target === infoOverlay) closeModal();
       });
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && !infoOverlay.hidden) closeModal();
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && !infoOverlay.hidden) closeModal();
       });
     </script>
   </body>
