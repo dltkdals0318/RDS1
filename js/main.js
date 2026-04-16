@@ -132,7 +132,7 @@ function buildSwipeCard(row) {
   const metaParts = [loc, date].filter(Boolean);
 
   card.innerHTML = `
-    ${image ? `<div class="card-image"><img src="${image}" alt="${row[KEYS.project]}" /></div>` : ""}
+    ${image ? `<div class="card-image"><img src="${image}" alt="${row[KEYS.project]}" draggable="false" /></div>` : ""}
     <div class="card-content">
       <p class="card-name">${row[KEYS.project]}</p>
       ${metaParts.length ? `<p class="card-meta">${metaParts.join("  ·  ")}</p>` : ""}
@@ -482,8 +482,10 @@ fetch(CSV_URL)
     const allRows = parseCSV(text);
     dataRows = allRows.filter((r) => r[KEYS.project]);
 
-    // 시험용: 2번째 카드에 이미지 적용
-    if (dataRows[1]) dataRows[1]["_image"] = "assets/images/02_honey_icecream.jpg";
+    // image
+    Object.entries(CARD_IMAGES).forEach(([idx, src]) => {
+      if (dataRows[idx]) dataRows[idx]["_image"] = src;
+    });
 
     document.title = allRows[0]?.[KEYS.title] || "Archive of Has-Beens";
 
