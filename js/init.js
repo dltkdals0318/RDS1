@@ -20,6 +20,23 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "Escape" && !infoOverlay.hidden) closeModal();
 });
 
+// ── nav click animation ───────────────
+
+function attachTiltClick(el) {
+  el.addEventListener("click", () => {
+    el.classList.remove("nav-tilt-active");
+    void el.offsetWidth;
+    el.classList.add("nav-tilt-active");
+  });
+  el.addEventListener("animationend", () => {
+    el.classList.remove("nav-tilt-active");
+  });
+}
+
+attachTiltClick(document.querySelector(".nav-logo"));
+attachTiltClick(document.querySelector(".nav-link"));
+attachTiltClick(infoBtn);
+
 // ── arrow cursor tooltips ──────────────
 
 const cursorTooltip = document.createElement("div");

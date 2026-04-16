@@ -21,12 +21,7 @@
   letter-spacing: 0.01em;
   background: #ffe596;
   padding: 0.36rem 1rem;
-  transition: transform 0.15s;
   display: inline-block;
-}
-
-.nav-logo:hover {
-  transform: rotate(-3deg);
 }
 
 .nav-right {
@@ -42,13 +37,36 @@
   text-decoration: none;
   background: #a3ff97;
   padding: 0.45rem 1rem;
-  transition: transform 0.15s;
   display: inline-block;
 }
 
-.nav-link:hover {
-  transform: rotate(-3deg);
-  color: #285a28;
+@media (hover: hover) {
+  .nav-logo {
+    transition: transform 0.15s;
+  }
+  .nav-logo:hover {
+    transform: rotate(-3deg);
+  }
+  .nav-link {
+    transition: transform 0.15s;
+  }
+  .nav-link:hover {
+    transform: rotate(-3deg);
+    color: #285a28;
+  }
+}
+
+/* ── nav click animation ─────────────── */
+
+@keyframes nav-tilt-click {
+  0%   { transform: rotate(0deg); }
+  35%  { transform: rotate(-5deg); }
+  65%  { transform: rotate(-2.5deg); }
+  100% { transform: rotate(0deg); }
+}
+
+.nav-tilt-active {
+  animation: nav-tilt-click 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 /* ── view ─────────────────────────────── */
@@ -551,11 +569,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.15s;
 }
 
-.info-btn:hover {
-  transform: rotate(-3deg);
+@media (hover: hover) {
+  .info-btn {
+    transition: transform 0.15s;
+  }
+  .info-btn:hover {
+    transform: rotate(-3deg);
+  }
 }
 
 /* ── Info modal ───────────────────────────── */
