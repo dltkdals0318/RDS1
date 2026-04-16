@@ -9,12 +9,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Archive of Has-Beens</title>
-    <link rel="preconnect" href="https://cdn.jsdelivr.net" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&display=swap"
-      rel="stylesheet"
-    />
     <link rel="stylesheet" href="css/global.css" />
     <link rel="stylesheet" href="css/style.css" />
   </head>
@@ -51,7 +45,11 @@
             >
           </div>
         </div>
-        <button class="swipe-arrow arrow-right" id="btn-preserve" title="아직 한물가지 않음">
+        <button
+          class="swipe-arrow arrow-right"
+          id="btn-preserve"
+          title="아직 한물가지 않음"
+        >
           &gt;
         </button>
       </div>
@@ -192,28 +190,8 @@
       </div>
     </div>
 
-    <script src="js/images.js" defer></script>
-    <script src="js/main.js" defer></script>
-    <script>
-      const infoBtn = document.getElementById("info-btn");
-      const infoOverlay = document.getElementById("info-overlay");
-      const infoClose = document.getElementById("info-close");
-
-      function closeModal() {
-        infoOverlay.hidden = true;
-        document.body.style.overflow = "";
-      }
-      infoBtn.addEventListener("click", () => {
-        infoOverlay.hidden = false;
-        document.body.style.overflow = "hidden";
-      });
-      infoClose.addEventListener("click", closeModal);
-      infoOverlay.addEventListener("click", (e) => {
-        if (e.target === infoOverlay) closeModal();
-      });
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape" && !infoOverlay.hidden) closeModal();
-      });
-    </script>
+    <script src="js/data.js" defer></script>
+    <script src="js/init.js" defer></script>
+    <script src="js/render.js" defer></script>
   </body>
 </html>

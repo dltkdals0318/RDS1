@@ -1,4 +1,96 @@
-// Image list
+const SPREADSHEET_ID = "1XWZN3TFyXQqLclqn7RqdmaaeEeoAmapN";
+
+const KEYS = {
+  title: "Meta-Title",
+  description: "Meta-Description",
+  about: "About",
+  project: "UL-Project",
+  cat: "UL-Cat",
+  location: "UL-Location",
+  date: "UL-Date",
+  calc: "UL-Calc",
+  link: "UL-Link",
+  state: "UL-State",
+};
+
+const CAT_COLORS = [
+  { bg: "#ff8a8a", text: "#7A2A2A" },
+  { bg: "#ffaf83", text: "#7A4A00" },
+  { bg: "#ffe596", text: "#6B5C00" },
+  { bg: "#a3ff97", text: "#285A28" },
+  { bg: "#8afff9", text: "#1A3E70" },
+  { bg: "#8ab3ff", text: "#28287A" },
+  { bg: "#bd8aff", text: "#50187A" },
+  { bg: "#ff8ae2", text: "#7A1858" },
+];
+
+const STATE_COLORS = {
+  "한물가는 중": { bg: "#e3e3e3", text: "#9a9a9a" },
+  한물감: { bg: "#9a9a9a", text: "#f3f3f3" },
+};
+
+let catColorMap = new Map();
+let dataRows = [];
+let swipeIndex = 0;
+let swipeCount = 0;
+let topCard = null;
+
+// ── color helpers ────────────────────────────
+
+function buildCatColorMap(cats) {
+  cats.forEach((cat, i) =>
+    catColorMap.set(cat, CAT_COLORS[i % CAT_COLORS.length]),
+  );
+}
+
+function catColor(str) {
+  return catColorMap.get(str) || { bg: "#E0E0E0", text: "#555555" };
+}
+function stateColor(str) {
+  return STATE_COLORS[str] || { bg: "#E0E0E0", text: "#555555" };
+}
+
+function makeBadge(label, color) {
+  return `<span class="badge" style="background:${color.bg};color:${color.text}">${label}</span>`;
+}
+
+// ── CSV ──────────────────────────────
+
+const CSV_URL = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/export?format=csv`;
+
+function parseCSV(text) {
+  const lines = text.trim().split("\n");
+  const headers = splitCSVLine(lines[0]);
+  return lines.slice(1).map((line) => {
+    const values = splitCSVLine(line);
+    const obj = {};
+    headers.forEach((h, i) => {
+      obj[h.trim()] = (values[i] || "").trim();
+    });
+    return obj;
+  });
+}
+
+function splitCSVLine(line) {
+  const result = [];
+  let current = "";
+  let inQuotes = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (ch === '"') {
+      inQuotes = !inQuotes;
+    } else if (ch === "," && !inQuotes) {
+      result.push(current);
+      current = "";
+    } else {
+      current += ch;
+    }
+  }
+  result.push(current);
+  return result;
+}
+
+// ── Image ──────────────────────────────
 
 const CARD_IMAGES = {
   0: "assets/images/02_honey_icecream.jpg",

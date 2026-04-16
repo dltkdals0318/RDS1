@@ -1,5 +1,3 @@
-@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css");
-
 @font-face {
   font-family: 'OnulSusa60';
   src: url('../assets/fonts/OnulSusa60-Medium.woff2') format('woff2');
@@ -42,8 +40,7 @@
   --red:      #c0251a;
   --blue:     #1a3355;
   --radius:   10px;
-  --font-sans:  'OnulSusa60', 'Pretendard', 'Noto Sans KR', sans-serif;
-  --font-serif: 'Nanum Myeongjo', Georgia, serif;
+  --font-sans:  'OnulSusa60', 'Noto Sans KR', sans-serif;
   --font-title: 'OSCrackerB', sans-serif;
 }
 
