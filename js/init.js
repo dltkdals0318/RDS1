@@ -138,7 +138,7 @@ fetch(CSV_URL)
     );
     attachArrowTooltip(
       document.getElementById("btn-preserve"),
-      "아직 한물가지 않음",
+      "잘나감",
       "#8ab3ff",
       "#28287a",
     );
