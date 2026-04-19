@@ -103,10 +103,18 @@ fetch(CSV_URL)
       if (dataRows[idx]) dataRows[idx]["_image"] = src;
     });
 
+    // swipe subset: random SWIPE_DECK_SIZE rows
+    swipeRows = dataRows
+      .map((row, i) => ({ ...row, _dataIdx: i }))
+      .sort(() => Math.random() - 0.5)
+      .slice(0, Math.min(SWIPE_DECK_SIZE, dataRows.length));
+
     // preload
-    Object.values(CARD_IMAGES).forEach((src) => {
-      const img = new Image();
-      img.src = src;
+    swipeRows.forEach((row) => {
+      if (row._image) {
+        const img = new Image();
+        img.src = row._image;
+      }
     });
 
     document.title = allRows[0]?.[KEYS.title] || "Archive of Has-Beens";

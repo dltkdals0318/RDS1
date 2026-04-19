@@ -220,14 +220,18 @@ function renderDeck() {
   deck.innerHTML = "";
   topCard = null;
 
-  if (swipeIndex >= dataRows.length) {
-    deck.innerHTML = '<p class="deck-empty">모든 항목을 판결했습니다.</p>';
+  if (swipeIndex >= swipeRows.length) {
+    deck.innerHTML = `
+      <div class="deck-complete">
+        <p class="deck-empty">모든 항목을 판결했습니다.</p>
+        <a href="#/archive" class="see-all-cta">전체 아카이브 보기 →</a>
+      </div>`;
     updateSwipeCounter();
     return;
   }
 
-  if (swipeIndex + 1 < dataRows.length) {
-    const nextCard = buildSwipeCard(dataRows[swipeIndex + 1]);
+  if (swipeIndex + 1 < swipeRows.length) {
+    const nextCard = buildSwipeCard(swipeRows[swipeIndex + 1]);
     nextCard.id = "next-card";
     nextCard.style.zIndex = 1;
     nextCard.style.transform = "scale(0.95)";
@@ -235,7 +239,7 @@ function renderDeck() {
     deck.appendChild(nextCard);
   }
 
-  const row = dataRows[swipeIndex];
+  const row = swipeRows[swipeIndex];
   const card = buildSwipeCard(row);
   card.style.zIndex = 2;
   makeSwipeable(card);
@@ -304,7 +308,8 @@ function makeSwipeable(card) {
 
   card.addEventListener("click", () => {
     if (!wasDrag) {
-      location.hash = `#/item/${swipeIndex}`;
+      const idx = swipeRows[swipeIndex]._dataIdx;
+      location.hash = `#/item/${idx}`;
     }
   });
 }
@@ -343,16 +348,12 @@ function doSwipe(card, action) {
 
   setTimeout(() => {
     swipeIndex++;
-    swipeCount++;
-    if (swipeCount >= 5) {
-      document.getElementById("see-all-cta").hidden = false;
-    }
     renderDeck();
   }, 420);
 }
 
 function updateSwipeCounter() {
   const el = document.getElementById("swipe-counter");
-  const current = Math.min(swipeIndex + 1, dataRows.length);
-  el.textContent = `${current} / ${dataRows.length}`;
+  const current = Math.min(swipeIndex + 1, swipeRows.length);
+  el.textContent = `${current} / ${swipeRows.length}`;
 }

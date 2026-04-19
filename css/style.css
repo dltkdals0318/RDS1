@@ -141,12 +141,17 @@
   flex: 1;
   min-height: 0;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .card-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  max-width: 95%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
   display: block;
   pointer-events: none;
   user-select: none;
@@ -276,11 +281,20 @@
   border-color: var(--text-0);
 }
 
+.deck-complete {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
 .deck-empty {
   font-size: 0.9rem;
   color: var(--text-2);
   text-align: center;
-  padding-top: 6rem;
 }
 
 /* ── archive view ──────────────────────────── */
