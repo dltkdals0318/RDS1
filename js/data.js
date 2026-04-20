@@ -34,6 +34,7 @@ const SWIPE_DECK_SIZE = 20;
 let catColorMap = new Map();
 let dataRows = [];
 let swipeRows = [];
+let swipeResults = [];
 let swipeIndex = 0;
 let topCard = null;
 

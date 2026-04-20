@@ -22,8 +22,12 @@
         <div id="nav-swipe">
           <button class="how-to-play-btn" id="how-to-play-btn">How to play</button>
         </div>
-        <div id="nav-archive" hidden>
+        <div id="nav-results" hidden>
           <a href="#/archive" class="nav-link">전체보기</a>
+          <button class="info-btn" id="info-btn-results" aria-label="한물감 리스트의 전제조건">info</button>
+        </div>
+        <div id="nav-archive" hidden>
+          <a href="#/results" class="nav-link">나의 한물감 리스트</a>
           <button class="info-btn" id="info-btn" aria-label="한물감 리스트의 전제조건">info</button>
         </div>
       </div>
@@ -57,6 +61,13 @@
       <div class="swipe-bottom">
         <p class="swipe-counter" id="swipe-counter"></p>
       </div>
+    </section>
+
+    <!-- results -->
+    <section id="view-results" class="view" hidden>
+      <section class="works">
+        <div id="results-grid" class="results-grid"></div>
+      </section>
     </section>
 
     <!-- archive -->

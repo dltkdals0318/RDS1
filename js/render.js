@@ -224,7 +224,7 @@ function renderDeck() {
     deck.innerHTML = `
       <div class="deck-complete">
         <p class="deck-empty">모든 항목을 판결했습니다.</p>
-        <a href="#/archive" class="see-all-cta">전체 아카이브 보기 →</a>
+        <a href="#/results" class="see-all-cta">나의 판결 보기 →</a>
       </div>`;
     updateSwipeCounter();
     return;
@@ -255,13 +255,11 @@ function makeSwipeable(card) {
   let currentX = 0,
     currentY = 0;
   let dragging = false;
-  let wasDrag = false;
 
   card.addEventListener("pointerdown", (e) => {
     startX = e.clientX;
     startY = e.clientY;
     dragging = true;
-    wasDrag = false;
     card.setPointerCapture(e.pointerId);
     card.style.transition = "none";
   });
@@ -270,8 +268,6 @@ function makeSwipeable(card) {
     if (!dragging) return;
     currentX = e.clientX - startX;
     currentY = e.clientY - startY;
-    if (Math.abs(currentX) > 4 || Math.abs(currentY) > 4) wasDrag = true;
-
     const rot = currentX * 0.07;
     card.style.transform = `translate(${currentX}px, ${currentY}px) rotate(${rot}deg)`;
     updateSwipeLabels(currentX);
@@ -306,12 +302,6 @@ function makeSwipeable(card) {
     currentY = 0;
   });
 
-  card.addEventListener("click", () => {
-    if (!wasDrag) {
-      const idx = swipeRows[swipeIndex]._dataIdx;
-      location.hash = `#/item/${idx}`;
-    }
-  });
 }
 
 function updateSwipeLabels(dx) {
@@ -347,6 +337,7 @@ function doSwipe(card, action) {
   }
 
   setTimeout(() => {
+    swipeResults.push({ row: swipeRows[swipeIndex], action });
     swipeIndex++;
     renderDeck();
   }, 420);
@@ -356,4 +347,70 @@ function updateSwipeCounter() {
   const el = document.getElementById("swipe-counter");
   const current = Math.min(swipeIndex + 1, swipeRows.length);
   el.textContent = `${current} / ${swipeRows.length}`;
+}
+
+// ── results view ──────────────────────────
+
+function renderResults() {
+  const grid = document.getElementById("results-grid");
+  grid.innerHTML = "";
+
+
+  const disposed = swipeResults.filter((r) => r.action === "dispose");
+  const preserved = swipeResults.filter((r) => r.action === "preserve");
+
+  function buildCard(row) {
+    const cat = row[KEYS.cat] || "";
+    const loc = row[KEYS.location] || "";
+    const date = row[KEYS.date] || "";
+    const calc = row[KEYS.calc] || "";
+    const link = row[KEYS.link] || "";
+    const catC = catColor(cat);
+    const metaParts = [loc, date].filter(Boolean);
+
+    const card = document.createElement("div");
+    card.className = "card";
+    if (cat) card.style.borderTop = `3px solid ${catC.bg}`;
+
+    const body = document.createElement("div");
+    body.className = "card-body";
+    body.innerHTML = `
+      <div class="badge-row">${cat ? makeBadge(cat, catC) : ""}</div>
+      <p class="project-name">${row[KEYS.project]}</p>
+      ${metaParts.length ? `<p class="project-meta">${metaParts.join("  ")}</p>` : ""}
+      ${calc ? `<p class="project-calc" style="background:${catC.bg};color:${catC.text}">하강폭 ${calc}%</p>` : ""}
+      ${link ? `<p class="project-link"><a href="${link}" target="_blank" rel="noopener" onclick="event.stopPropagation()">바로가기 →</a></p>` : ""}
+    `;
+    card.appendChild(body);
+    card.addEventListener("click", () => {
+      location.hash = `#/item/${row._dataIdx}`;
+    });
+    return card;
+  }
+
+  function buildSection(label, results) {
+    const section = document.createElement("div");
+    section.className = "results-section";
+
+    const header = document.createElement("h2");
+    header.className = "results-section-title";
+    header.textContent = `${label} (${results.length})`;
+    section.appendChild(header);
+
+    if (results.length === 0) {
+      const empty = document.createElement("p");
+      empty.className = "results-empty";
+      empty.textContent = "판결한 항목이 없습니다.";
+      section.appendChild(empty);
+    } else {
+      const g = document.createElement("div");
+      g.className = "results-grid";
+      results.forEach(({ row }) => g.appendChild(buildCard(row)));
+      section.appendChild(g);
+    }
+    return section;
+  }
+
+  grid.appendChild(buildSection("한물감", disposed));
+  grid.appendChild(buildSection("잘나감", preserved));
 }

@@ -26,6 +26,7 @@ const infoModal = makeModal("info-overlay", "info-close");
 const howToPlayModal = makeModal("how-to-play-overlay", "how-to-play-close");
 
 document.getElementById("info-btn").addEventListener("click", () => infoModal.open());
+document.getElementById("info-btn-results").addEventListener("click", () => infoModal.open());
 document.getElementById("how-to-play-btn").addEventListener("click", () => howToPlayModal.open());
 
 // ── nav click animation ───────────────
@@ -44,6 +45,7 @@ function attachTiltClick(el) {
 attachTiltClick(document.querySelector(".nav-logo"));
 attachTiltClick(document.getElementById("how-to-play-btn"));
 attachTiltClick(document.getElementById("info-btn"));
+attachTiltClick(document.getElementById("info-btn-results"));
 
 // ── arrow cursor tooltips ──────────────
 
@@ -75,9 +77,9 @@ function attachArrowTooltip(btn, text, bg, color) {
 function showView(id) {
   document.querySelectorAll(".view").forEach((v) => (v.hidden = true));
   document.getElementById(id).hidden = false;
-  const isSwipe = id === "view-swipe";
-  document.getElementById("nav-swipe").hidden = !isSwipe;
-  document.getElementById("nav-archive").hidden = isSwipe;
+  document.getElementById("nav-swipe").hidden = id !== "view-swipe";
+  document.getElementById("nav-results").hidden = id !== "view-results";
+  document.getElementById("nav-archive").hidden = id === "view-swipe" || id === "view-results";
 }
 
 function route() {
@@ -93,6 +95,9 @@ function route() {
     }
   } else if (hash === "#/archive") {
     showView("view-archive");
+  } else if (hash === "#/results") {
+    showView("view-results");
+    renderResults();
   } else {
     showView("view-swipe");
   }
