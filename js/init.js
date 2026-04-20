@@ -1,24 +1,32 @@
-// ── info modal ───────────────────────────
+// ── modal helper ─────────────────────────
 
-const infoBtn = document.getElementById("info-btn");
-const infoOverlay = document.getElementById("info-overlay");
-const infoClose = document.getElementById("info-close");
-
-function closeModal() {
-  infoOverlay.hidden = true;
-  document.body.style.overflow = "";
+function makeModal(overlayId, closeId) {
+  const overlay = document.getElementById(overlayId);
+  const closeBtn = document.getElementById(closeId);
+  function close() {
+    overlay.hidden = true;
+    document.body.style.overflow = "";
+  }
+  closeBtn.addEventListener("click", close);
+  overlay.addEventListener("click", (e) => {
+    if (e.target === overlay) close();
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !overlay.hidden) close();
+  });
+  return {
+    open() {
+      overlay.hidden = false;
+      document.body.style.overflow = "hidden";
+    },
+  };
 }
-infoBtn.addEventListener("click", () => {
-  infoOverlay.hidden = false;
-  document.body.style.overflow = "hidden";
-});
-infoClose.addEventListener("click", closeModal);
-infoOverlay.addEventListener("click", (e) => {
-  if (e.target === infoOverlay) closeModal();
-});
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape" && !infoOverlay.hidden) closeModal();
-});
+
+const infoModal = makeModal("info-overlay", "info-close");
+const howToPlayModal = makeModal("how-to-play-overlay", "how-to-play-close");
+
+document.getElementById("info-btn").addEventListener("click", () => infoModal.open());
+document.getElementById("how-to-play-btn").addEventListener("click", () => howToPlayModal.open());
 
 // ── nav click animation ───────────────
 
@@ -34,8 +42,8 @@ function attachTiltClick(el) {
 }
 
 attachTiltClick(document.querySelector(".nav-logo"));
-attachTiltClick(document.querySelector(".nav-link"));
-attachTiltClick(infoBtn);
+attachTiltClick(document.getElementById("how-to-play-btn"));
+attachTiltClick(document.getElementById("info-btn"));
 
 // ── arrow cursor tooltips ──────────────
 
@@ -67,6 +75,9 @@ function attachArrowTooltip(btn, text, bg, color) {
 function showView(id) {
   document.querySelectorAll(".view").forEach((v) => (v.hidden = true));
   document.getElementById(id).hidden = false;
+  const isSwipe = id === "view-swipe";
+  document.getElementById("nav-swipe").hidden = !isSwipe;
+  document.getElementById("nav-archive").hidden = isSwipe;
 }
 
 function route() {

@@ -30,6 +30,13 @@
   gap: 0.6rem;
 }
 
+#nav-swipe,
+#nav-archive {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
 .nav-link {
   font-size: 0.85rem;
   font-weight: 700;
@@ -577,6 +584,30 @@
   border-color: var(--text-0);
 }
 
+/* ── How to play button ─────────────────────── */
+
+.how-to-play-btn {
+  border: none;
+  background: #ff8ae2;
+  color: #7a1858;
+  font-size: 1.05rem;
+  font-weight: 700;
+  font-family: var(--font-title);
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  padding: 0.6rem 1rem;
+  display: inline-block;
+}
+
+@media (hover: hover) {
+  .how-to-play-btn {
+    transition: transform 0.15s;
+  }
+  .how-to-play-btn:hover {
+    transform: rotate(-3deg);
+  }
+}
+
 /* ── Info button ───────────────────────────── */
 
 .info-btn {
@@ -760,6 +791,11 @@
   .nav-link {
     font-size: 0.78rem;
     padding: 0.4rem 0.8rem;
+  }
+
+  .how-to-play-btn {
+    font-size: 0.95rem;
+    padding: 0.27rem 0.8rem;
   }
 
   .info-btn {

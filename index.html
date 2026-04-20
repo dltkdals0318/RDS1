@@ -10,7 +10,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Archive of Has-Beens</title>
-    <link rel="icon" href="favicon.png" type="image/png">
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
     <link rel="stylesheet" href="css/global.css" />
     <link rel="stylesheet" href="css/style.css" />
   </head>
@@ -19,14 +19,13 @@
     <nav class="top-nav">
       <a href="#/" class="nav-logo">Archive of Has-Beens</a>
       <div class="nav-right">
-        <a href="#/archive" class="nav-link">전체보기</a>
-        <button
-          class="info-btn"
-          id="info-btn"
-          aria-label="한물감 리스트의 전제조건"
-        >
-          info
-        </button>
+        <div id="nav-swipe">
+          <button class="how-to-play-btn" id="how-to-play-btn">How to play</button>
+        </div>
+        <div id="nav-archive" hidden>
+          <a href="#/archive" class="nav-link">전체보기</a>
+          <button class="info-btn" id="info-btn" aria-label="한물감 리스트의 전제조건">info</button>
+        </div>
       </div>
     </nav>
 
@@ -187,6 +186,22 @@
           밈을 하나의 카테고리로 쓰지 않은 이유는, 밈이 내용이 아니라 전파
           방식을 가리키는 개념이라 다른 카테고리들을 계속 흡수하는 문제가 생기기
           때문이다.
+        </p>
+      </div>
+    </div>
+
+    <!-- how to play -->
+    <div class="info-overlay" id="how-to-play-overlay" hidden>
+      <div
+        class="info-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="how-to-play-title"
+      >
+        <button class="info-close" id="how-to-play-close" aria-label="닫기">×</button>
+        <h2 class="info-title" id="how-to-play-title">How to play</h2>
+        <p class="info-body">
+          내용을 여기에 입력하세요.
         </p>
       </div>
     </div>
