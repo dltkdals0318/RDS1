@@ -224,7 +224,7 @@ function renderDeck() {
     deck.innerHTML = `
       <div class="deck-complete">
         <p class="deck-empty">모든 항목을 판결했습니다.</p>
-        <a href="#/results" class="see-all-cta">나의 판결 보기 →</a>
+        <a href="#/results" class="see-all-cta">나의 리스트 보기 →</a>
       </div>`;
     updateSwipeCounter();
     return;
@@ -301,7 +301,6 @@ function makeSwipeable(card) {
     currentX = 0;
     currentY = 0;
   });
-
 }
 
 function updateSwipeLabels(dx) {
@@ -354,7 +353,6 @@ function updateSwipeCounter() {
 function renderResults() {
   const grid = document.getElementById("results-grid");
   grid.innerHTML = "";
-
 
   const disposed = swipeResults.filter((r) => r.action === "dispose");
   const preserved = swipeResults.filter((r) => r.action === "preserve");
