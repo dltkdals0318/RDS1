@@ -161,23 +161,10 @@ fetch(CSV_URL)
       .sort(() => Math.random() - 0.5)
       .slice(0, Math.min(SWIPE_DECK_SIZE, dataRows.length));
 
-    // preload
+    // preload images in background, but allow click immediately
     const imagesToLoad = swipeRows.filter((r) => r._image).map((r) => r._image);
-    if (imagesToLoad.length === 0) {
-      updateLoadingProgress(1, 1);
-      setTimeout(readyLoadingScreen, 300);
-    } else {
-      let loaded = 0;
-      imagesToLoad.forEach((src) => {
-        const img = new Image();
-        img.onload = img.onerror = () => {
-          loaded++;
-          updateLoadingProgress(loaded, imagesToLoad.length);
-          if (loaded >= imagesToLoad.length) readyLoadingScreen();
-        };
-        img.src = src;
-      });
-    }
+    imagesToLoad.forEach((src) => { const img = new Image(); img.src = src; });
+    setTimeout(readyLoadingScreen, 300);
 
     document.title = allRows[0]?.[KEYS.title] || "Archive of Has-Beens";
 
