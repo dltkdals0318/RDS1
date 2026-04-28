@@ -1,3 +1,32 @@
+// ── loading helpers ───────────────────────
+
+function updateLoadingProgress() {}
+
+function hideLoadingScreen() {
+  const screen = document.getElementById("loading-screen");
+  if (!screen) return;
+  screen.classList.add("loading-done");
+  setTimeout(() => {
+    screen.hidden = true;
+  }, 520);
+}
+
+function readyLoadingScreen() {
+  const screen = document.getElementById("loading-screen");
+  if (!screen || screen.classList.contains("loading-ready")) return;
+  screen.classList.add("loading-ready");
+  screen.addEventListener(
+    "click",
+    () => {
+      screen.classList.add("loading-done");
+      setTimeout(() => {
+        screen.hidden = true;
+      }, 520);
+    },
+    { once: true },
+  );
+}
+
 // ── modal helper ─────────────────────────
 
 function makeModal(overlayId, closeId) {
@@ -25,9 +54,15 @@ function makeModal(overlayId, closeId) {
 const infoModal = makeModal("info-overlay", "info-close");
 const howToPlayModal = makeModal("how-to-play-overlay", "how-to-play-close");
 
-document.getElementById("info-btn").addEventListener("click", () => infoModal.open());
-document.getElementById("info-btn-results").addEventListener("click", () => infoModal.open());
-document.getElementById("how-to-play-btn").addEventListener("click", () => howToPlayModal.open());
+document
+  .getElementById("info-btn")
+  .addEventListener("click", () => infoModal.open());
+document
+  .getElementById("info-btn-results")
+  .addEventListener("click", () => infoModal.open());
+document
+  .getElementById("how-to-play-btn")
+  .addEventListener("click", () => howToPlayModal.open());
 
 // ── nav click animation ───────────────
 
@@ -79,7 +114,8 @@ function showView(id) {
   document.getElementById(id).hidden = false;
   document.getElementById("nav-swipe").hidden = id !== "view-swipe";
   document.getElementById("nav-results").hidden = id !== "view-results";
-  document.getElementById("nav-archive").hidden = id === "view-swipe" || id === "view-results";
+  document.getElementById("nav-archive").hidden =
+    id === "view-swipe" || id === "view-results";
 }
 
 function route() {
@@ -119,19 +155,29 @@ fetch(CSV_URL)
       if (dataRows[idx]) dataRows[idx]["_image"] = src;
     });
 
-    // swipe subset: random SWIPE_DECK_SIZE rows
+    // swipe subset
     swipeRows = dataRows
       .map((row, i) => ({ ...row, _dataIdx: i }))
       .sort(() => Math.random() - 0.5)
       .slice(0, Math.min(SWIPE_DECK_SIZE, dataRows.length));
 
     // preload
-    swipeRows.forEach((row) => {
-      if (row._image) {
+    const imagesToLoad = swipeRows.filter((r) => r._image).map((r) => r._image);
+    if (imagesToLoad.length === 0) {
+      updateLoadingProgress(1, 1);
+      setTimeout(readyLoadingScreen, 300);
+    } else {
+      let loaded = 0;
+      imagesToLoad.forEach((src) => {
         const img = new Image();
-        img.src = row._image;
-      }
-    });
+        img.onload = img.onerror = () => {
+          loaded++;
+          updateLoadingProgress(loaded, imagesToLoad.length);
+          if (loaded >= imagesToLoad.length) readyLoadingScreen();
+        };
+        img.src = src;
+      });
+    }
 
     document.title = allRows[0]?.[KEYS.title] || "Archive of Has-Beens";
 
@@ -186,9 +232,28 @@ fetch(CSV_URL)
   })
   .catch((err) => {
     console.error("Error:", err);
+    hideLoadingScreen();
     document.getElementById("swipe-deck").innerHTML = `
       <p style="color:var(--red);font-family:var(--font-sans);padding:2rem;text-align:center">
-        데이터 로드 실패.<br>
-        <small style="font-size:0.75rem">① 스프레드시트 공유 설정 확인<br>② Live Server 또는 GitHub Pages로 실행</small>
+        데이터 로드 실패.
       </p>`;
   });
+
+// ── dev keyboard shortcuts (1~4) ─────────
+
+document.addEventListener("keydown", (e) => {
+  const tag = document.activeElement.tagName;
+  if (tag === "INPUT" || tag === "TEXTAREA") return;
+  if (e.key === "1") {
+    const screen = document.getElementById("loading-screen");
+    screen.classList.remove("loading-done", "loading-ready");
+    screen.hidden = false;
+    setTimeout(readyLoadingScreen, 1200);
+  } else if (e.key === "2") {
+    location.hash = "#/";
+  } else if (e.key === "3") {
+    location.hash = "#/results";
+  } else if (e.key === "4") {
+    location.hash = "#/archive";
+  }
+});

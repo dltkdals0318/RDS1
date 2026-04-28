@@ -15,6 +15,39 @@
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
+    <!-- loading screen -->
+    <div id="loading-screen" role="status" aria-label="콘텐츠 로딩 중">
+      <div class="loading-content">
+        <span class="loading-logo">Archive of Has-Beens</span>
+
+        <div class="loading-how-row">
+          <div class="loading-how-side loading-how-side--left">
+            <span class="loading-tooltip-badge loading-tooltip-badge--left"
+              >한물감</span
+            >
+          </div>
+          <div class="loading-how-center">
+            <div class="loading-card-mock">
+              <div class="loading-card-img"></div>
+              <div class="loading-card-bar"></div>
+            </div>
+          </div>
+          <div class="loading-how-side loading-how-side--right">
+            <span class="loading-tooltip-badge loading-tooltip-badge--right"
+              >잘나감</span
+            >
+          </div>
+        </div>
+
+        <p class="loading-desc">
+          카드를 좌우로 스와이프해서
+          <br />한물간 아이템을 수집해보세요!
+        </p>
+
+        <p class="loading-start-hint" id="loading-start-hint">click to start</p>
+      </div>
+    </div>
+
     <!-- navigator -->
     <nav class="top-nav">
       <a href="#/" class="nav-logo">Archive of Has-Beens</a>
@@ -227,8 +260,27 @@
           ×
         </button>
         <h2 class="info-title" id="how-to-play-title">How to play</h2>
-        <p class="info-body">
-          카드를 좌우로 스와이프해서 한물간 아이템을 수집해보세요!
+        <div class="loading-how-row htp-how-row">
+          <div class="loading-how-side loading-how-side--left">
+            <span class="loading-tooltip-badge loading-tooltip-badge--left"
+              >한물감</span
+            >
+          </div>
+          <div class="loading-how-center">
+            <div class="loading-card-mock">
+              <div class="loading-card-img"></div>
+              <div class="loading-card-bar"></div>
+            </div>
+          </div>
+          <div class="loading-how-side loading-how-side--right">
+            <span class="loading-tooltip-badge loading-tooltip-badge--right"
+              >잘나감</span
+            >
+          </div>
+        </div>
+        <p class="loading-desc">
+          카드를 좌우로 스와이프해서<br />
+          한물간 아이템을 수집해보세요!
         </p>
       </div>
     </div>

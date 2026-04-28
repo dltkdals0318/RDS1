@@ -1,3 +1,203 @@
+/* ── loading screen ─────────────────────── */
+
+#loading-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  transition: opacity 0.5s ease;
+}
+
+#loading-screen.loading-done {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.loading-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2.5rem;
+  max-width: 420px;
+  width: 100%;
+}
+
+.loading-logo {
+  font-family: var(--font-title);
+  font-size: 1.15rem;
+  font-weight: 700;
+  padding: 0.45rem 1.1rem;
+  display: inline-block;
+  animation: loading-logo-cycle 2.8s linear infinite; /* ← 2.4s = 색상 한 사이클 전체 시간 */
+}
+
+@keyframes loading-logo-cycle {
+  0%,
+  32.9% {
+    background: #ffe596;
+    color: #6b5c00;
+  } /* 노랑 */
+  33%,
+  65.9% {
+    background: #ff8ae2;
+    color: #7a1858;
+  } /* 핑크 */
+  66%,
+  99.9% {
+    background: #a3ff97;
+    color: #285a28;
+  } /* 초록 */
+  100% {
+    background: #ffe596;
+    color: #6b5c00;
+  }
+}
+
+.loading-how-row {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.loading-how-side {
+  display: flex;
+  align-items: center;
+}
+
+.loading-how-side--left {
+  justify-content: flex-end;
+}
+
+.loading-how-side--right {
+  justify-content: flex-start;
+}
+
+.loading-tooltip-badge {
+  font-family: var(--font-title);
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 0.35rem 0.75rem;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+  display: inline-block;
+}
+
+.loading-tooltip-badge--left {
+  background: #ff8a8a;
+  color: #7a2a2a;
+  transform: rotate(-3deg);
+}
+
+.loading-tooltip-badge--right {
+  background: #8ab3ff;
+  color: #28287a;
+  transform: rotate(3deg);
+}
+
+.loading-how-center {
+  display: flex;
+  justify-content: center;
+}
+
+.loading-card-mock {
+  width: 64px;
+  height: 86px;
+  background: var(--surface);
+  border: 1.5px solid var(--border-2);
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: loading-sway 2.5s ease-in-out infinite;
+}
+
+@keyframes loading-sway {
+  0%,
+  100% {
+    transform: rotate(-4deg);
+  }
+  50% {
+    transform: rotate(4deg);
+  }
+}
+
+.loading-card-img {
+  flex: 1;
+  background: var(--border);
+  margin: 6px 6px 4px;
+  border-radius: 4px;
+  opacity: 0.5;
+}
+
+.loading-card-bar {
+  height: 14px;
+  margin: 0 6px 6px;
+  background: var(--border-2);
+  border-radius: 2px;
+  opacity: 0.4;
+}
+
+#loading-screen.loading-ready {
+  cursor: pointer;
+}
+
+.loading-desc {
+  font-size: 0.8rem;
+  color: var(--text-2);
+  text-align: center;
+  line-height: 1.85;
+  word-break: keep-all;
+}
+
+.loading-start-hint {
+  font-family: var(--font-title);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--border-2);
+  pointer-events: none;
+  margin-top: 0.5rem;
+}
+
+#loading-screen.loading-ready .loading-start-hint {
+  color: var(--text-0);
+  pointer-events: auto;
+  animation: loading-hint-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes loading-hint-pulse {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.htp-how-row {
+  margin: 0.75rem 0 1.75rem;
+}
+
+@media (max-width: 440px) {
+  .loading-content {
+    gap: 1.75rem;
+  }
+  .loading-logo {
+    font-size: 1rem;
+    padding: 0.36rem 0.9rem;
+  }
+  .loading-how-row {
+    gap: 1rem;
+  }
+}
+
 /* ── nav ────────────────────────────────── */
 
 .top-nav {
@@ -751,6 +951,11 @@
   font-weight: 700;
   margin-bottom: 1rem;
   letter-spacing: -0.01em;
+}
+
+#how-to-play-title {
+  font-family: var(--font-title);
+  letter-spacing: 0.01em;
 }
 
 .info-formula {
