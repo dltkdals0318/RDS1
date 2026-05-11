@@ -218,14 +218,20 @@ async function renderDeathCert(row, idx) {
   graphArea.innerHTML = makeTrendSVG(date, calc, catC);
   cert.appendChild(graphArea);
 
-  const trendInfo = TREND_DATA_MAP[row[KEYS.project]];
+  const projectName = row[KEYS.project];
+  const trendInfo = TREND_DATA_MAP[projectName];
   if (trendInfo) {
     const series = await fetchTrendSeries(trendInfo.file, trendInfo.column);
     if (series && series.length > 1) {
       graphArea.innerHTML = makeTrendSVGFromData(series, catC);
       const graphWrap = graphArea.querySelector(".trend-graph-wrap");
       if (graphWrap) initTrendHover(graphWrap, series, catC);
+    } else {
+      console.warn(`[trend] CSV 로드 실패: "${trendInfo.file}" / column="${trendInfo.column}"`);
     }
+  } else if (Object.keys(TREND_DATA_MAP).some(k => k.trim().toLowerCase() === projectName?.trim().toLowerCase())) {
+    const matched = Object.keys(TREND_DATA_MAP).find(k => k.trim().toLowerCase() === projectName?.trim().toLowerCase());
+    console.warn(`[trend] 대소문자/공백 불일치 — 스프레드시트: ${JSON.stringify(projectName)} / MAP 키: ${JSON.stringify(matched)}`);
   }
 
   const info = document.createElement("div");

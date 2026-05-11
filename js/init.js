@@ -163,6 +163,17 @@ fetch(CSV_URL)
 
     initArchive();
 
+    // 스프레드시트 프로젝트명 ↔ TREND_DATA_MAP 매칭 진단
+    const mapKeys = Object.keys(TREND_DATA_MAP);
+    const sheetNames = dataRows.map(r => r[KEYS.project]).filter(Boolean);
+    const matched = sheetNames.filter(n => TREND_DATA_MAP[n]);
+    const unmatched = mapKeys.filter(k => !sheetNames.includes(k));
+    if (unmatched.length) {
+      console.warn("[trend 진단] TREND_DATA_MAP에 있지만 스프레드시트에 없는 항목:", unmatched.map(k => JSON.stringify(k)));
+    } else {
+      console.log(`[trend 진단] 전체 매칭 OK (${matched.length}/${mapKeys.length})`);
+    }
+
     document.getElementById("cert-back").addEventListener("click", () => {
       if (
         document.referrer &&

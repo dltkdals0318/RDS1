@@ -11,7 +11,10 @@ async function fetchTrendSeries(file, column) {
 
   try {
     const res = await fetch(file);
-    if (!res.ok) return null;
+    if (!res.ok) {
+      console.warn(`[trend] fetch 실패 (${res.status}): ${file}`);
+      return null;
+    }
     const text = await res.text();
     const lines = text.trim().split("\n");
 
