@@ -98,7 +98,24 @@ function splitCSVLine(line) {
 //   2. 아래에 아이템명: { file, column } 형식으로 추가
 
 const TREND_DATA_MAP = {
-  "자니?": { file: "assets/data/01.csv", column: "자니?" },
+  "자니?":          { file: "assets/data/01.csv",  column: "자니?" },
+  "벌집 아이스크림": { file: "assets/data/02.csv",  column: "벌집 아이스크림" },
+  "창렬":           { file: "assets/data/03.csv",  column: "창렬" },
+  "허니버터칩":     { file: "assets/data/04.csv",  column: "허니버터칩" },
+  "히트다 히트":    { file: "assets/data/05.csv",  column: "히트다 히트" },
+  "PPAP":           { file: "assets/data/06.csv",  column: "PPAP" },
+  "너굴맨":         { file: "assets/data/07.csv",  column: "너굴맨" },
+  "피젯 스피너":    { file: "assets/data/08.csv",  column: "피젯 스피너" },
+  "대왕카스테라":   { file: "assets/data/09.csv",  column: "대왕카스테라" },
+  "트로피카나":     { file: "assets/data/010.csv", column: "트로피카나" },
+  "급식체":         { file: "assets/data/011.csv", column: "급식체" },
+  "yee":            { file: "assets/data/012.csv", column: "yee" },
+  "토끼 모자":      { file: "assets/data/013.csv", column: "토끼 모자" },
+  "앗살라말라이쿰": { file: "assets/data/014.csv", column: "앗살라말라이쿰" },
+  "날강두":         { file: "assets/data/015.csv", column: "날강두" },
+  "펭수":           { file: "assets/data/016.csv", column: "펭수" },
+  "곽철용":         { file: "assets/data/017.csv", column: "곽철용" },
+  "던질까 말까":    { file: "assets/data/018.csv", column: "던질까 말까" },
 };
 
 // ── Image ──────────────────────────────
