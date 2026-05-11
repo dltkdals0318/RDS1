@@ -32,7 +32,7 @@
   font-weight: 700;
   padding: 0.45rem 1.1rem;
   display: inline-block;
-  animation: loading-logo-cycle 2.8s linear infinite; /* ← 2.4s = 색상 한 사이클 전체 시간 */
+  animation: loading-logo-cycle 2.8s linear infinite;
 }
 
 @keyframes loading-logo-cycle {
