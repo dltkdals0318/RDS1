@@ -326,7 +326,7 @@
 .swipe-row {
   display: flex;
   align-items: center;
-  gap: 1.25rem;
+  gap: 2rem;
   width: 100%;
   max-width: 460px;
 }
@@ -436,14 +436,14 @@
 }
 
 .label-dispose {
-  color: var(--red);
-  border-color: var(--red);
+  color: var(--blue);
+  border-color: var(--blue);
   transform: rotate(-10deg);
 }
 
 .label-preserve {
-  color: var(--blue);
-  border-color: var(--blue);
+  color: var(--red);
+  border-color: var(--red);
   transform: rotate(10deg);
 }
 
@@ -476,14 +476,14 @@
 }
 
 .arrow-left .arrow-label {
-  background: #ff8a8a;
-  color: #7a2a2a;
+  background: #8ab3ff;
+  color: #28287a;
   transform: rotate(-3deg);
 }
 
 .arrow-right .arrow-label {
-  background: #8ab3ff;
-  color: #28287a;
+  background: #ff8a8a;
+  color: #7a2a2a;
   transform: rotate(3deg);
 }
 
@@ -1353,7 +1353,7 @@
   }
 
   .swipe-row {
-    gap: 0.5rem;
+    gap: 1rem;
   }
 
   .swipe-area {
