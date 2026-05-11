@@ -227,11 +227,21 @@ async function renderDeathCert(row, idx) {
       const graphWrap = graphArea.querySelector(".trend-graph-wrap");
       if (graphWrap) initTrendHover(graphWrap, series, catC);
     } else {
-      console.warn(`[trend] CSV 로드 실패: "${trendInfo.file}" / column="${trendInfo.column}"`);
+      console.warn(
+        `[trend] CSV 로드 실패: "${trendInfo.file}" / column="${trendInfo.column}"`,
+      );
     }
-  } else if (Object.keys(TREND_DATA_MAP).some(k => k.trim().toLowerCase() === projectName?.trim().toLowerCase())) {
-    const matched = Object.keys(TREND_DATA_MAP).find(k => k.trim().toLowerCase() === projectName?.trim().toLowerCase());
-    console.warn(`[trend] 대소문자/공백 불일치 — 스프레드시트: ${JSON.stringify(projectName)} / MAP 키: ${JSON.stringify(matched)}`);
+  } else if (
+    Object.keys(TREND_DATA_MAP).some(
+      (k) => k.trim().toLowerCase() === projectName?.trim().toLowerCase(),
+    )
+  ) {
+    const matched = Object.keys(TREND_DATA_MAP).find(
+      (k) => k.trim().toLowerCase() === projectName?.trim().toLowerCase(),
+    );
+    console.warn(
+      `[trend] 대소문자/공백 불일치 — 스프레드시트: ${JSON.stringify(projectName)} / MAP 키: ${JSON.stringify(matched)}`,
+    );
   }
 
   const info = document.createElement("div");
@@ -293,7 +303,7 @@ function renderDeck() {
   if (swipeIndex >= swipeRows.length) {
     deck.innerHTML = `
       <div class="deck-complete">
-        <p class="deck-empty">모든 항목을 판결했습니다.</p>
+        <p class="deck-empty">모든 유행템을 확인했습니다.</p>
         <a href="#/results" class="see-all-cta">나의 리스트 보기 →</a>
       </div>`;
     updateSwipeCounter();
