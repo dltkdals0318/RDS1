@@ -1297,6 +1297,22 @@
 
 /* ── responsive ──────────────────────────────── */
 
+@media (min-width: 1024px) {
+  .swipe-row {
+    max-width: 550px;
+  }
+
+  .swipe-area {
+    max-height: 550px;
+  }
+
+  #grid,
+  .results-section .results-grid {
+    grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+    gap: 1rem;
+  }
+}
+
 /* 001 nav */
 
 @media (max-width: 440px) {
