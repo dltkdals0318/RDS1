@@ -215,10 +215,9 @@ async function renderDeathCert(row, idx) {
 
   const graphArea = document.createElement("div");
   graphArea.className = "detail-graph-area";
-  graphArea.innerHTML = makeTrendSVG(date, calc, catC); // 합성 그래프 (기본값)
+  graphArea.innerHTML = makeTrendSVG(date, calc, catC);
   cert.appendChild(graphArea);
 
-  // 실제 시계열 데이터가 매핑돼 있으면 교체 + hover 인터랙션 연결
   const trendInfo = TREND_DATA_MAP[row[KEYS.project]];
   if (trendInfo) {
     const series = await fetchTrendSeries(trendInfo.file, trendInfo.column);
@@ -386,7 +385,7 @@ function updateSwipeLabels(dx) {
 }
 
 function doSwipe(card, action) {
-  topCard = null; // 애니메이션 중 중복 클릭 방지
+  topCard = null;
 
   const targetX = action === "preserve" ? 900 : -900;
   const rot = action === "preserve" ? 20 : -20;
@@ -481,5 +480,3 @@ function renderResults() {
   grid.appendChild(buildSection("안다", disposed));
   grid.appendChild(buildSection("모른다", preserved));
 }
-
-// customize.js 로 이전됨

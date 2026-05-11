@@ -1,5 +1,3 @@
-// customize.js
-
 (function () {
   "use strict";
 
@@ -59,7 +57,7 @@
         p.image(pg, 0, 0);
       };
 
-      // ── 마우스 ──────────────────────────────────
+      // ── mouse ──────────────────────────────────
       p.mousePressed = function () {
         if (!inCanvas()) return;
         if (tool === "stamp") {
@@ -69,7 +67,6 @@
         isDrawing = true;
         prevX = p.mouseX;
         prevY = p.mouseY;
-        // 점 하나 찍기
         dotAt(p.mouseX, p.mouseY);
         p.redraw();
       };
@@ -86,7 +83,7 @@
         isDrawing = false;
       };
 
-      // ── 터치 (스크롤 방지) ───────────────────────
+      // ── touch ───────────────────────
       p.touchStarted = function () {
         if (!inCanvas()) return false;
         if (tool === "stamp") {
@@ -115,7 +112,7 @@
         return false;
       };
 
-      // ── 헬퍼 ────────────────────────────────────
+      // ── helper ────────────────────────────────────
       function inCanvas() {
         return (
           p.mouseX >= 0 && p.mouseX <= CW && p.mouseY >= 0 && p.mouseY <= CH
@@ -153,14 +150,12 @@
         const col = p.color(currentColor);
 
         if (tool === "pen") {
-          // 깔끔한 선
           pg.noFill();
           pg.stroke(col);
           pg.strokeWeight(brushSize);
           pg.strokeCap(p.ROUND);
           pg.line(x1, y1, x2, y2);
         } else if (tool === "brush") {
-          // 브리슬 브러쉬: 여러 가닥이 랜덤 산포
           const d = p.dist(x1, y1, x2, y2);
           const steps = Math.max(1, Math.floor(d / 3));
           const bristles = Math.max(6, brushSize * 2);
@@ -214,7 +209,7 @@
         pg.image(img, x - sz / 2, y - (sz * ratio) / 2, sz, sz * ratio);
       }
 
-      // ── 외부에서 제어할 API ──────────────────────
+      // ── API ──────────────────────
       p.setTool = (t) => {
         tool = t;
       };
@@ -239,9 +234,9 @@
     wireUI();
   }
 
-  // ── UI 이벤트 연결 ────────────────────────────
+  // ── UI events ────────────────────────────
   function wireUI() {
-    // 도구 버튼
+    // tool buttons
     document
       .querySelectorAll("#customize-section [data-tool]")
       .forEach((btn) => {
@@ -251,7 +246,7 @@
         });
       });
 
-    // 크기 버튼
+    // size buttons
     document
       .querySelectorAll("#customize-section [data-size]")
       .forEach((btn) => {
@@ -264,10 +259,8 @@
         });
       });
 
-    // 색상 팔레트
     buildColorPalette();
 
-    // 초기화
     const clearBtn = document.getElementById("tool-clear");
     if (clearBtn) clearBtn.addEventListener("click", () => pInst.clearCanvas());
   }
@@ -287,7 +280,6 @@
           .forEach((s) => s.classList.remove("active"));
         sw.classList.add("active");
         if (pInst) pInst.setColor(c);
-        // 도장 모드였으면 펜으로 복귀
         const hasActiveTool = document.querySelector(
           "#customize-section [data-tool].active",
         );
@@ -302,7 +294,7 @@
     });
   }
 
-  // ── 도장 팔레트 (안다고 답한 이미지) ───────────
+  // ── stamp palette ───────────
   function buildStampPalette() {
     const el = document.getElementById("stamp-palette");
     if (!el) return;
@@ -335,7 +327,7 @@
     });
   }
 
-  // ── 헬퍼 ────────────────────────────────────
+  // ── helper ────────────────────────────────────
   function setActiveToolBtn(activeBtn) {
     document
       .querySelectorAll("#customize-section [data-tool]")
@@ -355,13 +347,11 @@
       .forEach((b) => b.classList.remove("active"));
   }
 
-  // ── 외부 진입점 ─────────────────────────────
   window._initCustomize = function () {
-    initCustomizeP5(); // 최초 1회만 실행됨
-    buildStampPalette(); // 결과 페이지 방문마다 갱신
+    initCustomizeP5();
+    buildStampPalette();
   };
 
-  // 페이지 최초 로드 시 이미 #/customize 면 즉시 초기화
   if (location.hash === "#/customize") {
     window._initCustomize();
   }
