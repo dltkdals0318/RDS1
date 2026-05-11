@@ -23,7 +23,7 @@
         <div class="loading-how-row">
           <div class="loading-how-side loading-how-side--left">
             <span class="loading-tooltip-badge loading-tooltip-badge--left"
-              >한물감</span
+              >안다</span
             >
           </div>
           <div class="loading-how-center">
@@ -34,14 +34,14 @@
           </div>
           <div class="loading-how-side loading-how-side--right">
             <span class="loading-tooltip-badge loading-tooltip-badge--right"
-              >잘나감</span
+              >모른다</span
             >
           </div>
         </div>
 
         <p class="loading-desc">
           카드를 좌우로 스와이프해서
-          <br />한물간 아이템을 수집해보세요!
+          <br />이 유행을 알고 있었는지 답해보세요!
         </p>
 
         <p class="loading-start-hint" id="loading-start-hint">click to start</p>
@@ -58,6 +58,7 @@
           </button>
         </div>
         <div id="nav-results" hidden>
+          <a href="#/customize" class="nav-link nav-link--customize">유행 타임캡슐 만들기</a>
           <a href="#/archive" class="nav-link">전체보기</a>
           <button
             class="info-btn"
@@ -67,7 +68,11 @@
             info
           </button>
         </div>
+        <div id="nav-customize" hidden>
+          <a href="#/results" class="nav-link">나의 리스트</a>
+        </div>
         <div id="nav-archive" hidden>
+          <a href="#/customize" class="nav-link nav-link--customize">유행 타임캡슐 만들기</a>
           <a href="#/results" class="nav-link">나의 한물감 리스트</a>
           <button
             class="info-btn"
@@ -83,26 +88,22 @@
     <!-- swipe -->
     <section id="view-swipe" class="view">
       <div class="swipe-row">
-        <button class="swipe-arrow arrow-left" id="btn-dispose" title="한물감">
-          &lt;
+        <button class="swipe-arrow arrow-left" id="btn-dispose">
+          <span class="arrow-label">안다</span>
         </button>
         <div class="swipe-area">
           <div class="swipe-deck" id="swipe-deck"></div>
           <div class="swipe-labels" id="swipe-labels">
             <span class="swipe-label label-dispose" id="label-dispose"
-              >한물감</span
+              >안다</span
             >
             <span class="swipe-label label-preserve" id="label-preserve"
-              >아직 한물가지 않음</span
+              >모른다</span
             >
           </div>
         </div>
-        <button
-          class="swipe-arrow arrow-right"
-          id="btn-preserve"
-          title="아직 한물가지 않음"
-        >
-          &gt;
+        <button class="swipe-arrow arrow-right" id="btn-preserve">
+          <span class="arrow-label">모른다</span>
         </button>
       </div>
       <div class="swipe-bottom">
@@ -112,8 +113,38 @@
 
     <!-- results -->
     <section id="view-results" class="view" hidden>
-      <section class="works">
-        <div id="results-grid" class="results-grid"></div>
+      <div id="results-grid"></div>
+    </section>
+
+    <!-- customize -->
+    <section id="view-customize" class="view" hidden>
+      <section class="customize-section" id="customize-section">
+        <div class="customize-header">
+          <h2 class="customize-title">유행 타임캡슐 만들기</h2>
+          <p class="customize-desc">나의 추억의 유행템을 활용하여 타임캡슐을 만들어보세요!</p>
+        </div>
+
+        <div class="stamp-palette-wrap">
+          <div class="stamp-palette" id="stamp-palette"></div>
+        </div>
+
+        <div class="customize-workspace">
+          <div class="customize-canvas-wrap" id="customize-canvas-wrap"></div>
+          <div class="customize-toolbar">
+            <button class="tool-btn active" data-tool="pen">펜</button>
+            <button class="tool-btn" data-tool="marker">마커</button>
+            <button class="tool-btn" data-tool="brush">브러쉬</button>
+            <div class="tool-sep"></div>
+            <button class="size-btn active" data-size="3">S</button>
+            <button class="size-btn" data-size="9">M</button>
+            <button class="size-btn" data-size="22">L</button>
+            <div class="tool-sep"></div>
+            <div class="color-palette" id="color-palette"></div>
+            <div class="tool-sep"></div>
+            <button class="tool-btn" data-tool="eraser">지우개</button>
+            <button class="tool-btn tool-clear" id="tool-clear">초기화</button>
+          </div>
+        </div>
       </section>
     </section>
 
@@ -263,7 +294,7 @@
         <div class="loading-how-row htp-how-row">
           <div class="loading-how-side loading-how-side--left">
             <span class="loading-tooltip-badge loading-tooltip-badge--left"
-              >한물감</span
+              >안다</span
             >
           </div>
           <div class="loading-how-center">
@@ -274,19 +305,22 @@
           </div>
           <div class="loading-how-side loading-how-side--right">
             <span class="loading-tooltip-badge loading-tooltip-badge--right"
-              >잘나감</span
+              >모른다</span
             >
           </div>
         </div>
         <p class="loading-desc">
           카드를 좌우로 스와이프해서<br />
-          한물간 아이템을 수집해보세요!
+          이 유행을 알고 있었는지 답해보세요!
         </p>
       </div>
     </div>
 
+    <script src="assets/p5.min.js" defer></script>
     <script src="js/data.js" defer></script>
+    <script src="js/trends.js" defer></script>
     <script src="js/init.js" defer></script>
     <script src="js/render.js" defer></script>
+    <script src="js/customize.js" defer></script>
   </body>
 </html>

@@ -82,30 +82,6 @@ attachTiltClick(document.getElementById("how-to-play-btn"));
 attachTiltClick(document.getElementById("info-btn"));
 attachTiltClick(document.getElementById("info-btn-results"));
 
-// ── arrow cursor tooltips ──────────────
-
-const cursorTooltip = document.createElement("div");
-cursorTooltip.className = "cursor-tooltip";
-cursorTooltip.hidden = true;
-document.body.appendChild(cursorTooltip);
-
-function attachArrowTooltip(btn, text, bg, color) {
-  btn.addEventListener("mouseenter", (e) => {
-    cursorTooltip.textContent = text;
-    cursorTooltip.style.background = bg;
-    cursorTooltip.style.color = color;
-    cursorTooltip.hidden = false;
-    cursorTooltip.style.left = e.clientX + 18 + "px";
-    cursorTooltip.style.top = e.clientY - 14 + "px";
-  });
-  btn.addEventListener("mousemove", (e) => {
-    cursorTooltip.style.left = e.clientX + 18 + "px";
-    cursorTooltip.style.top = e.clientY - 14 + "px";
-  });
-  btn.addEventListener("mouseleave", () => {
-    cursorTooltip.hidden = true;
-  });
-}
 
 // ── router ───────────────────────────────
 
@@ -114,8 +90,9 @@ function showView(id) {
   document.getElementById(id).hidden = false;
   document.getElementById("nav-swipe").hidden = id !== "view-swipe";
   document.getElementById("nav-results").hidden = id !== "view-results";
+  document.getElementById("nav-customize").hidden = id !== "view-customize";
   document.getElementById("nav-archive").hidden =
-    id === "view-swipe" || id === "view-results";
+    id === "view-swipe" || id === "view-results" || id === "view-customize";
 }
 
 function route() {
@@ -134,6 +111,9 @@ function route() {
   } else if (hash === "#/results") {
     showView("view-results");
     renderResults();
+  } else if (hash === "#/customize") {
+    showView("view-customize");
+    if (typeof window._initCustomize === "function") window._initCustomize();
   } else {
     showView("view-swipe");
   }
@@ -204,18 +184,6 @@ fetch(CSV_URL)
     window.addEventListener("hashchange", route);
     route();
 
-    attachArrowTooltip(
-      document.getElementById("btn-dispose"),
-      "한물감",
-      "#ff8a8a",
-      "#7a2a2a",
-    );
-    attachArrowTooltip(
-      document.getElementById("btn-preserve"),
-      "잘나감",
-      "#8ab3ff",
-      "#28287a",
-    );
   })
   .catch((err) => {
     console.error("Error:", err);

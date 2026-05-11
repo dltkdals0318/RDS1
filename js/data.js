@@ -93,6 +93,14 @@ function splitCSVLine(line) {
   return result;
 }
 
+// ── Trend Data Map ───────────────────────────────────────────────────
+//   1. Google Trends에서 내보낸 time series CSV를 assets/data/ 폴더에 저장
+//   2. 아래에 아이템명: { file, column } 형식으로 추가
+
+const TREND_DATA_MAP = {
+  "자니?": { file: "assets/data/01.csv", column: "자니?" },
+};
+
 // ── Image ──────────────────────────────
 
 const CARD_IMAGES = {

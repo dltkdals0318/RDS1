@@ -1,3 +1,58 @@
+// ── trend graph SVG ──────────────────
+
+function makeTrendSVG(date, calc, catC) {
+  const calcVal = Math.max(0, parseFloat(calc) || 75);
+  const endRatio = (100 - calcVal) / 100;
+  const peakYear = parseInt(date) || 2020;
+
+  const w = 300,
+    h = 100;
+  const topY = 10;
+  const bottomY = h - 4;
+  const endY = bottomY - endRatio * (bottomY - topY);
+
+  const startX = 15;
+  const peakX = 105;
+  const endX = w - 15;
+
+  const fillPath = [
+    `M ${startX},${bottomY}`,
+    `C ${startX + 25},${bottomY} ${peakX - 45},${topY} ${peakX},${topY}`,
+    `C ${peakX + 40},${topY} ${peakX + 80},${endY} ${endX},${endY}`,
+    `L ${endX},${bottomY} Z`,
+  ].join(" ");
+
+  const linePath = [
+    `M ${startX},${bottomY}`,
+    `C ${startX + 25},${bottomY} ${peakX - 45},${topY} ${peakX},${topY}`,
+    `C ${peakX + 40},${topY} ${peakX + 80},${endY} ${endX},${endY}`,
+  ].join(" ");
+
+  const color = catC.bg;
+  const gradId = `tg-${peakYear}-${calcVal}`;
+
+  return `
+    <div class="trend-graph-wrap">
+      <svg class="trend-graph-svg" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="${gradId}" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="${color}" stop-opacity="0.4"/>
+            <stop offset="100%" stop-color="${color}" stop-opacity="0.06"/>
+          </linearGradient>
+        </defs>
+        <path d="${fillPath}" fill="url(#${gradId})"/>
+        <path d="${linePath}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <line x1="${peakX}" y1="${topY + 3}" x2="${peakX}" y2="${bottomY}" stroke="${color}" stroke-width="1" stroke-dasharray="3,2" opacity="0.45"/>
+      </svg>
+      <div class="trend-x-axis">
+        <span>${peakYear - 1}</span>
+        <span class="trend-peak-label">↑ ${peakYear} </span>
+        <span>${peakYear + 1}~</span>
+      </div>
+    </div>
+  `;
+}
+
 // ── archive grid ──────────────────────
 
 function initArchive() {
@@ -34,7 +89,7 @@ function initArchive() {
       <p class="project-name">${row[KEYS.project]}</p>
       ${metaParts.length ? `<p class="project-meta">${metaParts.join("  ")}</p>` : ""}
       ${calc ? `<p class="project-calc" style="background:${catColor(cat).bg};color:${catColor(cat).text}">하강폭 ${calc}%</p>` : ""}
-      ${link ? `<p class="project-link"><a href="${link}" target="_blank" rel="noopener" onclick="event.stopPropagation()">바로가기 →</a></p>` : ""}
+      ${link ? `<p class="project-link"><a href="${link}" target="_blank" rel="noopener" onclick="event.stopPropagation()">관련 정보 보기</a></p>` : ""}
     `;
 
     card.appendChild(body);
@@ -146,42 +201,52 @@ function initArchive() {
 
 // ── detail view ───────────────────────────
 
-function renderDeathCert(row, idx) {
+async function renderDeathCert(row, idx) {
   const cert = document.getElementById("death-cert");
   cert.innerHTML = "";
 
-  const link = row[KEYS.link] || "";
   const cat = row[KEYS.cat] || "";
   const loc = row[KEYS.location] || "";
   const date = row[KEYS.date] || "";
+  const calc = row[KEYS.calc] || "";
+  const state = row[KEYS.state] || "";
   const catC = catColor(cat);
   const metaParts = [loc, date].filter(Boolean);
 
-  if (link) {
-    const frameWrap = document.createElement("div");
-    frameWrap.className = "detail-frame-wrap";
+  const graphArea = document.createElement("div");
+  graphArea.className = "detail-graph-area";
+  graphArea.innerHTML = makeTrendSVG(date, calc, catC); // 합성 그래프 (기본값)
+  cert.appendChild(graphArea);
 
-    const iframe = document.createElement("iframe");
-    iframe.src = link;
-    iframe.className = "detail-frame";
-    iframe.setAttribute(
-      "sandbox",
-      "allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox",
-    );
-    iframe.setAttribute("loading", "lazy");
-    iframe.setAttribute("title", row[KEYS.project]);
-
-    frameWrap.appendChild(iframe);
-    cert.appendChild(frameWrap);
+  // 실제 시계열 데이터가 매핑돼 있으면 교체 + hover 인터랙션 연결
+  const trendInfo = TREND_DATA_MAP[row[KEYS.project]];
+  if (trendInfo) {
+    const series = await fetchTrendSeries(trendInfo.file, trendInfo.column);
+    if (series && series.length > 1) {
+      graphArea.innerHTML = makeTrendSVGFromData(series, catC);
+      const graphWrap = graphArea.querySelector(".trend-graph-wrap");
+      if (graphWrap) initTrendHover(graphWrap, series, catC);
+    }
   }
 
   const info = document.createElement("div");
   info.className = "detail-info";
   if (cat) info.style.borderTop = `3px solid ${catC.bg}`;
+
+  const stateBadge = state ? makeBadge(state, stateColor(state)) : "";
+  const catBadge = cat ? makeBadge(cat, catC) : "";
+
   info.innerHTML = `
+    <div class="badge-row">${stateBadge}${catBadge}</div>
     <div class="detail-name-row">
       <p class="card-name">${row[KEYS.project]}</p>
-      ${link ? `<a class="detail-frame-fallback" href="${link}" target="_blank" rel="noopener" onclick="event.stopPropagation()">이 페이지가 안보이시나요?</a>` : ""}
+      ${
+        calc
+          ? `<div class="detail-calc-stat">
+        <span class="detail-calc-value" style="color:${catC.bg}">−${calc}%</span>
+      </div>`
+          : ""
+      }
     </div>
     ${metaParts.length ? `<p class="card-meta">${metaParts.join("  ·  ")}</p>` : ""}
   `;
@@ -321,6 +386,8 @@ function updateSwipeLabels(dx) {
 }
 
 function doSwipe(card, action) {
+  topCard = null; // 애니메이션 중 중복 클릭 방지
+
   const targetX = action === "preserve" ? 900 : -900;
   const rot = action === "preserve" ? 20 : -20;
 
@@ -336,7 +403,9 @@ function doSwipe(card, action) {
   }
 
   setTimeout(() => {
-    swipeResults.push({ row: swipeRows[swipeIndex], action });
+    if (swipeIndex < swipeRows.length) {
+      swipeResults.push({ row: swipeRows[swipeIndex], action });
+    }
     swipeIndex++;
     renderDeck();
   }, 420);
@@ -377,7 +446,7 @@ function renderResults() {
       <p class="project-name">${row[KEYS.project]}</p>
       ${metaParts.length ? `<p class="project-meta">${metaParts.join("  ")}</p>` : ""}
       ${calc ? `<p class="project-calc" style="background:${catC.bg};color:${catC.text}">하강폭 ${calc}%</p>` : ""}
-      ${link ? `<p class="project-link"><a href="${link}" target="_blank" rel="noopener" onclick="event.stopPropagation()">바로가기 →</a></p>` : ""}
+      ${link ? `<p class="project-link"><a href="${link}" target="_blank" rel="noopener" onclick="event.stopPropagation()">관련 정보 보기</a></p>` : ""}
     `;
     card.appendChild(body);
     card.addEventListener("click", () => {
@@ -398,7 +467,7 @@ function renderResults() {
     if (results.length === 0) {
       const empty = document.createElement("p");
       empty.className = "results-empty";
-      empty.textContent = "판결한 항목이 없습니다.";
+      empty.textContent = "답한 항목이 없습니다.";
       section.appendChild(empty);
     } else {
       const g = document.createElement("div");
@@ -409,6 +478,8 @@ function renderResults() {
     return section;
   }
 
-  grid.appendChild(buildSection("한물감", disposed));
-  grid.appendChild(buildSection("잘나감", preserved));
+  grid.appendChild(buildSection("안다", disposed));
+  grid.appendChild(buildSection("모른다", preserved));
 }
+
+// customize.js 로 이전됨
