@@ -141,7 +141,7 @@ function makeTrendSVGFromData(series, catC) {
   `;
 }
 
-// ── hover 인터랙션 ────────────────────────────────────────────────
+// ── hover ────────────────────────────────────────────────
 /**
  * @param {HTMLElement} graphWrap - .trend-graph-wrap
  * @param {{date:string, value:number}[]} series
@@ -152,14 +152,16 @@ function initTrendHover(graphWrap, series, catC) {
   if (!svg) return;
 
   const ns = "http://www.w3.org/2000/svg";
-  const W = 300, H = 100;
-  const padL = 2, padT = 10, padB = 4;
+  const W = 300,
+    H = 100;
+  const padL = 2,
+    padT = 10,
+    padB = 4;
   const plotW = W - padL - 2;
   const plotH = H - padT - padB;
   const n = series.length;
   const baseY = H - padB;
 
-  // 커서 세로선
   const cursorLine = document.createElementNS(ns, "line");
   cursorLine.setAttribute("y1", String(padT));
   cursorLine.setAttribute("y2", String(baseY));
@@ -170,7 +172,6 @@ function initTrendHover(graphWrap, series, catC) {
   cursorLine.style.display = "none";
   svg.appendChild(cursorLine);
 
-  // 이벤트 수신용 투명 overlay (맨 위)
   const overlay = document.createElementNS(ns, "rect");
   overlay.setAttribute("x", "0");
   overlay.setAttribute("y", "0");
@@ -179,7 +180,7 @@ function initTrendHover(graphWrap, series, catC) {
   overlay.setAttribute("fill", "transparent");
   svg.appendChild(overlay);
 
-  // 툴팁: 배경색을 그래프 카테고리 색으로
+  // tooltip
   graphWrap.style.position = "relative";
   const tooltip = document.createElement("div");
   tooltip.className = "trend-tooltip";
@@ -203,13 +204,14 @@ function initTrendHover(graphWrap, series, catC) {
     cursorLine.setAttribute("x2", ptX);
     cursorLine.style.display = "";
 
-    // 날짜 형식: "2014년 01월: 12"
+    // date format
     const parts = p.date.split("-");
     tooltip.textContent = `${parts[0]}년 ${parts[1]}월: ${p.value}`;
 
     const pct = (ptX / W) * 100;
     tooltip.style.left = `${pct}%`;
-    tooltip.style.transform = pct > 68 ? "translateX(-108%)" : "translateX(6px)";
+    tooltip.style.transform =
+      pct > 68 ? "translateX(-108%)" : "translateX(6px)";
     tooltip.style.display = "block";
   }
 
