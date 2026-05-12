@@ -215,33 +215,43 @@ async function renderDeathCert(row, idx) {
 
   const graphArea = document.createElement("div");
   graphArea.className = "detail-graph-area";
-  graphArea.innerHTML = makeTrendSVG(date, calc, catC);
-  cert.appendChild(graphArea);
 
   const projectName = row[KEYS.project];
   const trendInfo = TREND_DATA_MAP[projectName];
+  let loadedSeries = null;
+
   if (trendInfo) {
     const series = await fetchTrendSeries(trendInfo.file, trendInfo.column);
     if (series && series.length > 1) {
+      loadedSeries = series;
       graphArea.innerHTML = makeTrendSVGFromData(series, catC);
-      const graphWrap = graphArea.querySelector(".trend-graph-wrap");
-      if (graphWrap) initTrendHover(graphWrap, series, catC);
     } else {
+      graphArea.innerHTML = makeTrendSVG(date, calc, catC);
       console.warn(
         `[trend] CSV 로드 실패: "${trendInfo.file}" / column="${trendInfo.column}"`,
       );
     }
-  } else if (
-    Object.keys(TREND_DATA_MAP).some(
-      (k) => k.trim().toLowerCase() === projectName?.trim().toLowerCase(),
-    )
-  ) {
-    const matched = Object.keys(TREND_DATA_MAP).find(
-      (k) => k.trim().toLowerCase() === projectName?.trim().toLowerCase(),
-    );
-    console.warn(
-      `[trend] 대소문자/공백 불일치 — 스프레드시트: ${JSON.stringify(projectName)} / MAP 키: ${JSON.stringify(matched)}`,
-    );
+  } else {
+    graphArea.innerHTML = makeTrendSVG(date, calc, catC);
+    if (
+      Object.keys(TREND_DATA_MAP).some(
+        (k) => k.trim().toLowerCase() === projectName?.trim().toLowerCase(),
+      )
+    ) {
+      const matched = Object.keys(TREND_DATA_MAP).find(
+        (k) => k.trim().toLowerCase() === projectName?.trim().toLowerCase(),
+      );
+      console.warn(
+        `[trend] 대소문자/공백 불일치 — 스프레드시트: ${JSON.stringify(projectName)} / MAP 키: ${JSON.stringify(matched)}`,
+      );
+    }
+  }
+
+  cert.appendChild(graphArea);
+
+  if (loadedSeries) {
+    const graphWrap = graphArea.querySelector(".trend-graph-wrap");
+    if (graphWrap) initTrendHover(graphWrap, loadedSeries, catC);
   }
 
   const info = document.createElement("div");
@@ -304,7 +314,7 @@ function renderDeck() {
     deck.innerHTML = `
       <div class="deck-complete">
         <p class="deck-empty">모든 유행템을 확인했습니다.</p>
-        <a href="#/results" class="see-all-cta">나의 리스트 보기 →</a>
+        <a href="#/results" class="see-all-cta">나의 아카이브 보기 →</a>
       </div>`;
     updateSwipeCounter();
     return;
