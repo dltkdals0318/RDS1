@@ -10,188 +10,68 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Archive of Has-Beens</title>
+    <title>Trend Time Capsule</title>
     <link rel="icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="preconnect" href="https://o6cdhdutve.execute-api.ap-northeast-2.amazonaws.com">
+    <link rel="stylesheet" href="https://o6cdhdutve.execute-api.ap-northeast-2.amazonaws.com/v1/api/css/drop_fontstream_css/?sid=gAAAAABqFFYGV27VlCUQHfje8jFGgE6IS2uEVi4cJoYmeqAgZYIynOwPVwM5QP30WsUVo_W3Bl6REyVyy2-lXe3tI0hY987WHC6kIH6HWnEyLfZjIYs0Mpr1lgs9i-51Zs3LFMSqYgchdGR9xJip89QKb7tNaMjgpiCapq8Uw_FeF1lM3KL2WkIKcYqrxuYuJUtsLfZQ6_x1XDJpTDWT7LMt3wbxdZ5Jz1xlWxraTZX_xW3DULXpV5NOPM3ImOF1V05OeMglkldz" charset="utf-8" referrerpolicy="origin"></link>
+    <link rel="stylesheet" href="css/clash-display.css" />
     <link rel="stylesheet" href="css/global.css" />
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
     <!-- loading screen -->
     <div id="loading-screen" role="status" aria-label="콘텐츠 로딩 중">
-      <div class="loading-content">
-        <span class="loading-logo">Archive of Has-Beens</span>
-
-        <div class="loading-how-row">
-          <div class="loading-how-side loading-how-side--left">
-            <span class="loading-tooltip-badge loading-tooltip-badge--left"
-              >안다</span
-            >
-          </div>
-          <div class="loading-how-center">
-            <div class="loading-card-mock">
-              <div class="loading-card-img"></div>
-              <div class="loading-card-bar"></div>
-            </div>
-          </div>
-          <div class="loading-how-side loading-how-side--right">
-            <span class="loading-tooltip-badge loading-tooltip-badge--right"
-              >모른다</span
-            >
-          </div>
-        </div>
-
-        <p class="loading-desc">
-          카드를 좌우로 스와이프해서
-          <br />이 유행을 알고 있었는지 답해보세요!
-        </p>
-
-        <p class="loading-start-hint" id="loading-start-hint">click to start</p>
+      <div class="loading-card">
+        <h1 class="loading-title title">Trend Time Capsule</h1>
+        <p class="loading-how-label">카드를 좌우로 스와이프해서<br>나만의 유행 타임캡슐을 만들어보세요!</p>
+        <input id="nickname-input" class="loading-enter" type="text" placeholder="(enter your nickname)" maxlength="20" autocomplete="off" spellcheck="false">
       </div>
     </div>
 
     <!-- navigator -->
     <nav class="top-nav">
-      <a href="#/" class="nav-logo">Archive of Has-Beens</a>
+      <a href="#/" class="nav-logo title">Trend Time Capsule</a>
       <div class="nav-right">
         <div id="nav-swipe">
-          <button class="how-to-play-btn" id="how-to-play-btn">
-            How to play
-          </button>
-        </div>
-        <div id="nav-results" hidden>
-          <a href="#/customize" class="nav-link nav-link--customize"
-            >유행 타임캡슐 만들기</a
-          >
-          <a href="#/archive" class="nav-link">전체 아카이브</a>
-          <button
-            class="info-btn"
-            id="info-btn-results"
-            aria-label="한물감 리스트의 전제조건"
-          >
-            info
-          </button>
-        </div>
-        <div id="nav-customize" hidden>
-          <a href="#/results" class="nav-link">나의 리스트</a>
-        </div>
-        <div id="nav-archive" hidden>
-          <a href="#/customize" class="nav-link nav-link--customize"
-            >유행 타임캡슐 만들기</a
-          >
-          <a href="#/results" class="nav-link">나의 아카이브</a>
-          <button
-            class="info-btn"
-            id="info-btn"
-            aria-label="한물감 리스트의 전제조건"
-          >
-            info
-          </button>
+          <button class="circle-btn how-to-play-btn" id="how-to-play-btn">?</button>
         </div>
       </div>
     </nav>
 
     <!-- swipe -->
     <section id="view-swipe" class="view">
-      <div class="swipe-row">
-        <button class="swipe-arrow arrow-left" id="btn-dispose">
-          <span class="arrow-label">안다</span>
-        </button>
+      <div class="swipe-stage">
+        <div class="swipe-side" id="side-dispose">
+          <button class="swipe-side-btn" id="btn-dispose">I know</button>
+          <div class="swipe-pile" id="pile-dispose"></div>
+        </div>
         <div class="swipe-area">
           <div class="swipe-deck" id="swipe-deck"></div>
           <div class="swipe-labels" id="swipe-labels">
-            <span class="swipe-label label-dispose" id="label-dispose"
-              >안다</span
-            >
-            <span class="swipe-label label-preserve" id="label-preserve"
-              >모른다</span
-            >
+            <span class="swipe-label label-dispose" id="label-dispose">I know</span>
+            <span class="swipe-label label-preserve" id="label-preserve">I don't know</span>
           </div>
         </div>
-        <button class="swipe-arrow arrow-right" id="btn-preserve">
-          <span class="arrow-label">모른다</span>
-        </button>
+        <div class="swipe-side" id="side-preserve">
+          <button class="swipe-side-btn" id="btn-preserve">I don't know</button>
+          <div class="swipe-pile" id="pile-preserve"></div>
+        </div>
       </div>
-      <div class="swipe-bottom">
-        <p class="swipe-counter" id="swipe-counter"></p>
-      </div>
+      <p class="swipe-counter" id="swipe-counter">
+        <span class="counter-current" id="counter-current"></span>
+        <span class="counter-sep">/</span>
+        <span class="counter-total" id="counter-total"></span>
+      </p>
     </section>
 
-    <!-- results -->
-    <section id="view-results" class="view" hidden>
-      <div id="results-grid"></div>
-    </section>
-
-    <!-- customize -->
-    <section id="view-customize" class="view" hidden>
-      <section class="customize-section" id="customize-section">
-        <div class="customize-header">
-          <h2 class="customize-title">유행 타임캡슐 만들기</h2>
-          <p class="customize-desc">
-            나의 추억의 유행템을 활용하여 타임캡슐을 만들어보세요!
-          </p>
-        </div>
-
-        <div class="stamp-palette-wrap">
-          <div class="stamp-palette" id="stamp-palette"></div>
-        </div>
-
-        <div class="customize-workspace">
-          <div class="customize-canvas-wrap" id="customize-canvas-wrap"></div>
-          <div class="customize-toolbar">
-            <button class="tool-btn active" data-tool="pen">펜</button>
-            <button class="tool-btn" data-tool="brush">브러쉬</button>
-            <div class="tool-sep"></div>
-            <button class="size-btn active" data-size="3">S</button>
-            <button class="size-btn" data-size="9">M</button>
-            <button class="size-btn" data-size="22">L</button>
-            <div class="tool-sep"></div>
-            <div class="color-palette" id="color-palette"></div>
-            <div class="tool-sep"></div>
-            <button class="tool-btn" data-tool="eraser">지우개</button>
-            <button class="tool-btn tool-clear" id="tool-clear">초기화</button>
-          </div>
-        </div>
-      </section>
-    </section>
 
     <!-- archive -->
     <section id="view-archive" class="view" hidden>
-      <nav class="filter-bar">
-        <button class="filter-pill active" id="filter-all">전체</button>
-        <div class="filter-group" id="filter-group-cat"></div>
-        <div class="filter-group sort-group">
-          <span class="sort-label">수치</span>
-          <button
-            class="filter-pill sort-pill"
-            data-sort="calc-desc"
-            title="높은순"
-          >
-            ↑
-          </button>
-          <button
-            class="filter-pill sort-pill"
-            data-sort="calc-asc"
-            title="낮은순"
-          >
-            ↓
-          </button>
-          <span class="sort-label">날짜</span>
-          <button
-            class="filter-pill sort-pill"
-            data-sort="date-desc"
-            title="최신순"
-          >
-            ↑
-          </button>
-          <button
-            class="filter-pill sort-pill"
-            data-sort="date-asc"
-            title="오래된순"
-          >
-            ↓
-          </button>
-        </div>
-      </nav>
+      <div class="archive-header">
+        <button class="circle-btn archive-info-btn" id="archive-info-btn" aria-label="한물감이란?">?</button>
+        <a href="#/" class="archive-title title">Time Capsule Archive</a>
+        <button class="circle-btn archive-save-btn" aria-label="나만의 타임캡슐 만들기">↓</button>
+      </div>
       <section class="works">
         <div id="grid"></div>
       </section>
@@ -205,137 +85,9 @@
       </div>
     </section>
 
-    <!-- info -->
-    <div class="info-overlay" id="info-overlay" hidden>
-      <div
-        class="info-modal"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="info-modal-title"
-      >
-        <button class="info-close" id="info-close" aria-label="닫기">×</button>
-        <h2 class="info-title">한물간 유행템 아카이브</h2>
-        <p class="info-body">
-          한국의 패스트 문화는 다양한 아이템들을 유행의 화두에 던져 놓았다.
-          탕후루와 두바이 쫀득 쿠키(두쫀쿠)는 한때 줄을 설 정도로 소비되었다.
-          그러나 이제는 그 유행들이 한물 갔을 뿐만 아니라, 왜 그것이 당시에
-          비이성적일 정도로 뜨거웠는지, 어떤 사회적 조건이 그것을 만들었는지도
-          가물가물하다. 유행이 지나면 인터넷 데이터들 사이에서도 자연스레 관심이
-          사라지며 죽은 문서만 남는다. 한물간 유행템 컬렉션은 이렇게 소비된
-          것들을 추억하고, 특별하게 보관하고자 하는 사람들을 위한 웹사이트다.
-        </p>
-        <div class="info-divider"></div>
-        <h2 class="info-title" id="info-modal-title">하강폭이란?</h2>
-        <div class="info-formula">
-          하강폭(T+6) = (최고점 − T+6개월값) ÷ 최고점 × 100 &nbsp;<strong
-            >≥ 75%</strong
-          >
-        </div>
-        <p class="info-body">
-          구글 트렌드는 최고점을 100으로 상대화한 수치를 제공하므로 절대적
-          검색량과 무관하게 그래프가 나타난다. 다만 검색량 감소만으로는 유행이
-          식은 것인지 계절성 때문인지 구분하기 어렵기 때문에, 최고점 이후 6개월
-          시점에서 75% 이상 하강했을 때 유행이 종료됐다고 판단한다.
-        </p>
-        <p class="info-body">
-          75%는 탕후루, 달고나커피, 아무노래 등 누구나 한물갔다고 공감하는
-          사례들의 실제 하강폭에서 귀납적으로 도출한 수치다. 이는 박노순(2023)이
-          구글 트렌드 그래프를 산모형과 파동형으로 분류하며 산모형을 "특정
-          시점에 피크를 형성한 뒤 급격히 하강하는 패턴"으로 정의한 것과
-          일치한다.
-        </p>
-        <div class="info-legend">
-          <div class="info-legend-item">
-            <span class="info-badge" style="background: #9a9a9a; color: #f3f3f3"
-              >한물감</span
-            >
-            <span>: 하강폭 ≥ 75%</span>
-          </div>
-          <div class="info-legend-item">
-            <span class="info-badge" style="background: #e3e3e3; color: #9a9a9a"
-              >한물가는 중</span
-            >
-            <span>: 하강폭 &lt; 75%</span>
-          </div>
-        </div>
-        <div class="info-divider"></div>
-        <p class="info-body">카테고리는 다음과 같다.</p>
-        <div class="info-cat-list">
-          <span class="info-badge info-cat-badge" data-cat="음식·음료"
-            >음식·음료</span
-          >
-          <span class="info-badge info-cat-badge" data-cat="패션·뷰티"
-            >패션·뷰티</span
-          >
-          <span class="info-badge info-cat-badge" data-cat="밈·슬랭"
-            >밈·슬랭</span
-          >
-          <span class="info-badge info-cat-badge" data-cat="챌린지"
-            >챌린지</span
-          >
-          <span class="info-badge info-cat-badge" data-cat="제품·굿즈"
-            >제품·굿즈</span
-          >
-          <span class="info-badge info-cat-badge" data-cat="기술·경제"
-            >기술·경제</span
-          >
-          <span class="info-badge info-cat-badge" data-cat="라이프스타일"
-            >라이프스타일</span
-          >
-          <span class="info-badge info-cat-badge" data-cat="콘텐츠"
-            >콘텐츠</span
-          >
-        </div>
-        <p class="info-body">
-          밈을 하나의 카테고리로 쓰지 않은 이유는, 밈이 내용이 아니라 전파
-          방식을 가리키는 개념이라 다른 카테고리들을 계속 흡수하는 문제가 생기기
-          때문이다.
-        </p>
-      </div>
-    </div>
-
-    <!-- how to play -->
-    <div class="info-overlay" id="how-to-play-overlay" hidden>
-      <div
-        class="info-modal"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="how-to-play-title"
-      >
-        <button class="info-close" id="how-to-play-close" aria-label="닫기">
-          ×
-        </button>
-        <h2 class="info-title" id="how-to-play-title">How to play</h2>
-        <div class="loading-how-row htp-how-row">
-          <div class="loading-how-side loading-how-side--left">
-            <span class="loading-tooltip-badge loading-tooltip-badge--left"
-              >안다</span
-            >
-          </div>
-          <div class="loading-how-center">
-            <div class="loading-card-mock">
-              <div class="loading-card-img"></div>
-              <div class="loading-card-bar"></div>
-            </div>
-          </div>
-          <div class="loading-how-side loading-how-side--right">
-            <span class="loading-tooltip-badge loading-tooltip-badge--right"
-              >모른다</span
-            >
-          </div>
-        </div>
-        <p class="loading-desc">
-          카드를 좌우로 스와이프해서<br />
-          이 유행을 알고 있었는지 답해보세요!
-        </p>
-      </div>
-    </div>
-
-    <script src="assets/p5.min.js" defer></script>
     <script src="js/data.js" defer></script>
     <script src="js/trends.js" defer></script>
     <script src="js/init.js" defer></script>
     <script src="js/render.js" defer></script>
-    <script src="js/customize.js" defer></script>
   </body>
 </html>

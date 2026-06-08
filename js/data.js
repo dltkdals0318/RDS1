@@ -2,15 +2,11 @@ const SPREADSHEET_ID = "1XWZN3TFyXQqLclqn7RqdmaaeEeoAmapN";
 
 const KEYS = {
   title: "Meta-Title",
-  description: "Meta-Description",
-  about: "About",
   project: "UL-Project",
   cat: "UL-Cat",
-  location: "UL-Location",
   date: "UL-Date",
   calc: "UL-Calc",
   link: "UL-Link",
-  state: "UL-State",
 };
 
 const CAT_COLORS = [
@@ -23,11 +19,6 @@ const CAT_COLORS = [
   { bg: "#bd8aff", text: "#50187A" },
   { bg: "#ff8ae2", text: "#7A1858" },
 ];
-
-const STATE_COLORS = {
-  잘나감: { bg: "#e3e3e3", text: "#9a9a9a" },
-  한물감: { bg: "#9a9a9a", text: "#f3f3f3" },
-};
 
 const SWIPE_DECK_SIZE = 20;
 
@@ -48,13 +39,6 @@ function buildCatColorMap(cats) {
 
 function catColor(str) {
   return catColorMap.get(str) || { bg: "#E0E0E0", text: "#555555" };
-}
-function stateColor(str) {
-  return STATE_COLORS[str] || { bg: "#E0E0E0", text: "#555555" };
-}
-
-function makeBadge(label, color) {
-  return `<span class="badge" style="background:${color.bg};color:${color.text}">${label}</span>`;
 }
 
 // ── CSV ──────────────────────────────
@@ -98,24 +82,90 @@ function splitCSVLine(line) {
 //   2. update { file, column }
 
 const TREND_DATA_MAP = {
-  "자니?": { file: "assets/data/01.csv", column: "자니?" },
-  "벌집 아이스크림": { file: "assets/data/02.csv", column: "벌집 아이스크림" },
-  창렬: { file: "assets/data/03.csv", column: "창렬" },
-  허니버터칩: { file: "assets/data/04.csv", column: "허니버터칩" },
-  "히트다 히트": { file: "assets/data/05.csv", column: "히트다 히트" },
-  PPAP: { file: "assets/data/06.csv", column: "PPAP" },
-  너굴맨: { file: "assets/data/07.csv", column: "너굴맨" },
-  "피젯 스피너": { file: "assets/data/08.csv", column: "피젯 스피너" },
-  대왕카스테라: { file: "assets/data/09.csv", column: "대왕카스테라" },
-  트로피카나: { file: "assets/data/010.csv", column: "트로피카나" },
-  급식체: { file: "assets/data/011.csv", column: "급식체" },
-  yee: { file: "assets/data/012.csv", column: "yee" },
-  "토끼 모자": { file: "assets/data/013.csv", column: "토끼 모자" },
-  앗살라말라이쿰: { file: "assets/data/014.csv", column: "앗살라말라이쿰" },
-  날강두: { file: "assets/data/015.csv", column: "날강두" },
-  펭수: { file: "assets/data/016.csv", column: "펭수" },
-  곽철용: { file: "assets/data/017.csv", column: "곽철용" },
-  "던질까 말까": { file: "assets/data/018.csv", column: "던질까 말까" },
+  "자니?":              { file: "assets/data/01.csv",  column: "자니?" },
+  "벌집 아이스크림":    { file: "assets/data/02.csv",  column: "벌집 아이스크림" },
+  창렬:                 { file: "assets/data/03.csv",  column: "창렬" },
+  허니버터칩:           { file: "assets/data/04.csv",  column: "허니버터칩" },
+  "히트다 히트":        { file: "assets/data/05.csv",  column: "히트다 히트" },
+  PPAP:                 { file: "assets/data/06.csv",  column: "PPAP" },
+  너굴맨:               { file: "assets/data/07.csv",  column: "너굴맨" },
+  "피젯 스피너":        { file: "assets/data/08.csv",  column: "피젯 스피너" },
+  대왕카스테라:         { file: "assets/data/09.csv",  column: "대왕카스테라" },
+  트로피카나:           { file: "assets/data/010.csv", column: "트로피카나" },
+  급식체:               { file: "assets/data/011.csv", column: "급식체" },
+  가즈아:               { file: "assets/data/012.csv", column: "가즈아" },
+  yee:                  { file: "assets/data/013.csv", column: "yee" },
+  "토끼 모자":          { file: "assets/data/014.csv", column: "토끼 모자" },
+  앗살라말라이쿰:       { file: "assets/data/015.csv", column: "앗살라말라이쿰" },
+  날강두:               { file: "assets/data/016.csv", column: "날강두" },
+  펭수:                 { file: "assets/data/017.csv", column: "펭수" },
+  곽철용:               { file: "assets/data/018.csv", column: "곽철용" },
+  "던질까 말까":        { file: "assets/data/019.csv", column: "던질까 말까" },
+  아무노래:             { file: "assets/data/020.csv", column: "아무노래" },
+  "달고나 커피":        { file: "assets/data/021.csv", column: "달고나 커피" },
+  아임뚜렛:             { file: "assets/data/022.csv", column: "아임뚜렛" },
+  엄준식:               { file: "assets/data/023.csv", column: "엄준식" },
+  "동물의 숲":          { file: "assets/data/024.csv", column: "동물의 숲" },
+  관짝춤:               { file: "assets/data/025.csv", column: "관짝춤" },
+  깡:                   { file: "assets/data/026.csv", column: "깡" },
+  "첵스 파맛":          { file: "assets/data/027.csv", column: "첵스 파맛" },
+  어몽어스:             { file: "assets/data/028.csv", column: "어몽어스" },
+  다메다메:             { file: "assets/data/029.csv", column: "다메다메" },
+  나비보벳따우:         { file: "assets/data/030.csv", column: "나비보벳따우" },
+  사쿠란보:             { file: "assets/data/031.csv", column: "사쿠란보" },
+  이루다:               { file: "assets/data/032.csv", column: "이루다" },
+  클럽하우스:           { file: "assets/data/033.csv", column: "클럽하우스" },
+  롤린:                 { file: "assets/data/034.csv", column: "롤린" },
+  무야호:               { file: "assets/data/035.csv", column: "무야호" },
+  "멈춰!":              { file: "assets/data/036.csv", column: "멈춰!" },
+  가짜사나이:           { file: "assets/data/037.csv", column: "가짜사나이" },
+  한심좌:               { file: "assets/data/038.csv", column: "한심좌" },
+  팝잇:                 { file: "assets/data/039.csv", column: "팝잇" },
+  제로투:               { file: "assets/data/040.csv", column: "제로투" },
+  "슉 슈슉":            { file: "assets/data/041.csv", column: "슉 슈슉" },
+  "똥 밟았네":          { file: "assets/data/042.csv", column: "똥 밟았네" },
+  로제떡볶이:           { file: "assets/data/043.csv", column: "로제떡볶이" },
+  최준:                 { file: "assets/data/044.csv", column: "최준" },
+  "코카인 댄스":        { file: "assets/data/045.csv", column: "코카인 댄스" },
+  갸루피스:             { file: "assets/data/046.csv", column: "갸루피스" },
+  중꺾마:               { file: "assets/data/047.csv", column: "중꺾마" },
+  버터맥주:             { file: "assets/data/048.csv", column: "버터맥주" },
+  로우라이즈:           { file: "assets/data/049.csv", column: "로우라이즈" },
+  어쩔티비:             { file: "assets/data/050.csv", column: "어쩔티비" },
+  "AI 프로필":          { file: "assets/data/051.csv", column: "AI 프로필" },
+  해피캣:               { file: "assets/data/052.csv", column: "해피캣" },
+  "홍박사님을 아세요?": { file: "assets/data/053.csv", column: "홍박사님을 아세요?" },
+  "I am 신뢰에요":      { file: "assets/data/054.csv", column: "I am 신뢰에요" },
+  슬릭백:               { file: "assets/data/055.csv", column: "슬릭백" },
+  "멋지다 연진아":      { file: "assets/data/056.csv", column: "멋지다 연진아" },
+  장충동왕족발보쌈:     { file: "assets/data/057.csv", column: "장충동왕족발보쌈" },
+  탕후루:               { file: "assets/data/058.csv", column: "탕후루" },
+  "Chipi Chipi Chapa Chapa": { file: "assets/data/059.csv", column: "Chipi Chipi Chapa Chapa" },
+  당근칼:               { file: "assets/data/060.csv", column: "당근칼" },
+  럭키비키:             { file: "assets/data/061.csv", column: "럭키비키" },
+  "두바이 초콜릿":      { file: "assets/data/062.csv", column: "두바이 초콜릿" },
+  미룬이:               { file: "assets/data/063.csv", column: "미룬이" },
+  삐끼삐끼:             { file: "assets/data/064.csv", column: "삐끼삐끼" },
+  티니핑:               { file: "assets/data/065.csv", column: "티니핑" },
+  지브리스타일:         { file: "assets/data/066.csv", column: "지브리스타일" },
+  햄부기:               { file: "assets/data/067.csv", column: "햄부기" },
+  마라탕후루:           { file: "assets/data/068.csv", column: "마라탕후루" },
+  라부부:               { file: "assets/data/069.csv", column: "라부부" },
+  영포티:               { file: "assets/data/070.csv", column: "영포티" },
+  "개웃겨서 도티낳음":  { file: "assets/data/071.csv", column: "개웃겨서 도티낳음" },
+  매끈매끈하다:         { file: "assets/data/072.csv", column: "매끈매끈하다" },
+  "힙합보단 사랑, 사랑보단 돈": { file: "assets/data/073.csv", column: "힙합보단 사랑, 사랑보단 돈" },
+  "두바이 쫀득 쿠키":   { file: "assets/data/074.csv", column: "두바이 쫀득 쿠키" },
+  영미:                 { file: "assets/data/075.csv", column: "영미" },
+  에겐남:               { file: "assets/data/076.csv", column: "에겐남" },
+  나니가스키:           { file: "assets/data/077.csv", column: "나니가스키" },
+  퉁퉁퉁사후르:         { file: "assets/data/078.csv", column: "퉁퉁퉁사후르" },
+  "트랄라레로 트랄랄라": { file: "assets/data/079.csv", column: "트랄라레로 트랄랄라" },
+  "첫번째 레슨":        { file: "assets/data/080.csv", column: "첫번째 레슨" },
+  소다팝:               { file: "assets/data/081.csv", column: "소다팝" },
+  나야나:               { file: "assets/data/082.csv", column: "나야나" },
+  이븐:                 { file: "assets/data/083.csv", column: "이븐" },
+  칠가이:               { file: "assets/data/084.csv", column: "칠가이" },
 };
 
 // ── Image ──────────────────────────────

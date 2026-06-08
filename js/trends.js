@@ -115,13 +115,8 @@ function makeTrendSVGFromData(series, catC) {
   const linePath = _smoothPath(pts);
   const fillPath = `${linePath} L ${pts[n - 1].x.toFixed(1)},${baseY} L ${pts[0].x.toFixed(1)},${baseY} Z`;
 
-  const color = catC.bg;
+  const color = '#ff5b5b';
   const gradId = `tgr-${Math.random().toString(36).slice(2, 7)}`;
-  const peakX = pts[peakIdx].x.toFixed(1);
-
-  const startYear = series[0].date.slice(0, 4);
-  const peakYear = series[peakIdx].date.slice(0, 4);
-  const endYear = series[n - 1].date.slice(0, 4);
 
   return `
     <div class="trend-graph-wrap">
@@ -135,13 +130,28 @@ function makeTrendSVGFromData(series, catC) {
         <path d="${fillPath}" fill="url(#${gradId})"/>
         <path d="${linePath}" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
-      <div class="trend-x-axis">
-        <span>${startYear}</span>
-        <span class="trend-peak-label">↑ ${peakYear}</span>
-        <span>${endYear}</span>
-      </div>
     </div>
   `;
+}
+
+// ── synthetic series (for items without real CSV data) ───
+function makeSyntheticSeries(date, calc) {
+  const calcVal = Math.max(0, parseFloat(calc) || 75);
+  const endRatio = (100 - calcVal) / 100;
+  const n = 24;
+  const series = [];
+  for (let i = 0; i < n; i++) {
+    const t = i / (n - 1);
+    let value;
+    if (t <= 0.35) {
+      value = Math.sin((t / 0.35) * (Math.PI / 2)) * 100;
+    } else {
+      const fallT = (t - 0.35) / 0.65;
+      value = 100 - fallT * (1 - endRatio) * 100;
+    }
+    series.push({ date: `pt-${i}`, value: Math.round(value) });
+  }
+  return series;
 }
 
 // ── hover ────────────────────────────────────────────────
@@ -168,7 +178,7 @@ function initTrendHover(graphWrap, series, catC) {
   const cursorLine = document.createElementNS(ns, "line");
   cursorLine.setAttribute("y1", String(padT));
   cursorLine.setAttribute("y2", String(baseY));
-  cursorLine.setAttribute("stroke", catC.bg);
+  cursorLine.setAttribute("stroke", '#ff5b5b');
   cursorLine.setAttribute("stroke-width", "1");
   cursorLine.setAttribute("stroke-dasharray", "4,3");
   cursorLine.setAttribute("opacity", "0.8");
@@ -187,8 +197,8 @@ function initTrendHover(graphWrap, series, catC) {
   graphWrap.style.position = "relative";
   const tooltip = document.createElement("div");
   tooltip.className = "trend-tooltip";
-  tooltip.style.background = catC.bg;
-  tooltip.style.color = catC.text;
+  tooltip.style.background = '#ff5b5b';
+  tooltip.style.color = '#fff';
   graphWrap.appendChild(tooltip);
 
   function toSVGX(clientX) {
