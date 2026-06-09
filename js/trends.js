@@ -1,10 +1,5 @@
 const _trendCache = {};
 
-/**
- * @param {string} file
- * @param {string} column
- * @returns {Promise<{date:string, value:number}[]|null>}
- */
 async function fetchTrendSeries(file, column) {
   const cacheKey = `${file}::${column}`;
   if (_trendCache[cacheKey]) return _trendCache[cacheKey];
@@ -67,7 +62,6 @@ async function fetchTrendSeries(file, column) {
   }
 }
 
-// ── Catmull-Rom → Cubic Bezier ──────────────────
 function _smoothPath(pts) {
   if (pts.length < 2) return "";
   let d = `M ${pts[0].x.toFixed(1)},${pts[0].y.toFixed(1)}`;
@@ -85,11 +79,7 @@ function _smoothPath(pts) {
   return d;
 }
 
-/**
- * @param {{date:string, value:number}[]} series
- * @param {{bg:string, text:string}} catC
- */
-function makeTrendSVGFromData(series, catC) {
+function makeTrendSVGFromData(series) {
   const W = 300,
     H = 100;
   const padL = 2,
@@ -134,7 +124,6 @@ function makeTrendSVGFromData(series, catC) {
   `;
 }
 
-// ── synthetic series (for items without real CSV data) ───
 function makeSyntheticSeries(date, calc) {
   const calcVal = Math.max(0, parseFloat(calc) || 75);
   const endRatio = (100 - calcVal) / 100;
@@ -154,13 +143,7 @@ function makeSyntheticSeries(date, calc) {
   return series;
 }
 
-// ── hover ────────────────────────────────────────────────
-/**
- * @param {HTMLElement} graphWrap - .trend-graph-wrap
- * @param {{date:string, value:number}[]} series
- * @param {{bg:string, text:string}} catC
- */
-function initTrendHover(graphWrap, series, catC) {
+function initTrendHover(graphWrap, series) {
   const svg = graphWrap.querySelector("svg");
   if (!svg) return;
 

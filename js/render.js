@@ -1,6 +1,6 @@
 // ── trend graph SVG ──────────────────
 
-function makeTrendSVG(date, calc, catC) {
+function makeTrendSVG(date, calc) {
   const calcVal = Math.max(0, parseFloat(calc) || 75);
   const endRatio = (100 - calcVal) / 100;
   const peakYear = parseInt(date) || 2020;
@@ -118,10 +118,8 @@ async function renderDeathCert(row, idx) {
   const cert = document.getElementById("death-cert");
   cert.innerHTML = "";
 
-  const cat = row[KEYS.cat] || "";
   const date = row[KEYS.date] || "";
   const calc = row[KEYS.calc] || "";
-  const catC = catColor(cat);
 
   const graphArea = document.createElement("div");
   graphArea.className = "detail-graph-area";
@@ -134,9 +132,9 @@ async function renderDeathCert(row, idx) {
     const series = await fetchTrendSeries(trendInfo.file, trendInfo.column);
     if (series && series.length > 1) {
       loadedSeries = series;
-      graphArea.innerHTML = makeTrendSVGFromData(series, catC);
+      graphArea.innerHTML = makeTrendSVGFromData(series);
     } else {
-      graphArea.innerHTML = makeTrendSVG(date, calc, catC);
+      graphArea.innerHTML = makeTrendSVG(date, calc);
       console.warn(
         `[trend] CSV 로드 실패: "${trendInfo.file}" / column="${trendInfo.column}"`,
       );
@@ -161,7 +159,7 @@ async function renderDeathCert(row, idx) {
 
   if (loadedSeries) {
     const graphWrap = graphArea.querySelector(".trend-graph-wrap");
-    if (graphWrap) initTrendHover(graphWrap, loadedSeries, catC);
+    if (graphWrap) initTrendHover(graphWrap, loadedSeries);
   }
 
   const info = document.createElement("div");
@@ -213,10 +211,6 @@ function renderDeck() {
   topCard = null;
 
   if (swipeIndex >= swipeRows.length) {
-    const savedNick = sessionStorage.getItem("aohb_nickname");
-    const nickLine = savedNick
-      ? `<p class="deck-nick">${savedNick}'s archive</p>`
-      : "";
     deck.innerHTML = `
       <div class="deck-complete">
         <h2 class="deck-complete-title">Complete!</h2>

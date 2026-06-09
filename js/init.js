@@ -52,7 +52,7 @@ function readyLoadingScreen() {
   }
 }
 
-// ── print view (100×148mm postcard) ─────────────────────
+// ── print view ──────────────────────────────────────────
 
 function getDominantYear(items) {
   const counts = {};
@@ -74,7 +74,6 @@ async function openPrintView({ dev = false } = {}) {
       );
       return;
     }
-    // dev mode: use first 10 dataRows as stand-ins
     knownItems = dataRows
       .slice(0, 10)
       .map((row) => ({ row, action: "dispose" }));
@@ -92,8 +91,6 @@ async function openPrintView({ dev = false } = {}) {
     ? `님의 유행 타임캡슐은 ${dominant.year}년에 머물러 있네요!`
     : "님의 유행 타임캡슐이 완성되었어요!";
 
-  // year axis (2013–2026): ticks straddle the rule, aligned to graph edges
-  // graph padL=2, padR=2, W=300 → edge offset = 2/300*100% ≈ 0.667%
   const _majorYears = new Set([2013, 2016, 2019, 2022, 2025]);
   const _axisItems = Array.from({ length: 14 }, (_, i) => 2013 + i)
     .map((y) => {
@@ -103,7 +100,6 @@ async function openPrintView({ dev = false } = {}) {
     .join("");
   const axisHTML = `<div style="position:relative;flex-shrink:0;width:100%;height:6mm;"><div style="position:absolute;top:1.25mm;left:0;right:0;height:0.5mm;background:#685aff;"></div><div style="display:flex;justify-content:space-between;padding-left:calc(2/300*100%);padding-right:calc(2/300*100%);box-sizing:border-box;">${_axisItems}</div></div>`;
 
-  // fetch/build series for each known item
   const itemData = await Promise.all(
     knownItems.map(async (r) => {
       const name = r.row[KEYS.project];
@@ -119,7 +115,6 @@ async function openPrintView({ dev = false } = {}) {
     }),
   );
 
-  // build overlay SVG paths (reuses _smoothPath from trends.js)
   const W = 300,
     H = 120;
   const padL = 2,
@@ -216,7 +211,7 @@ ${sandollLink}
   }
   .p-title {
     font-family: 'ClashDisplay-Variable', sans-serif;
-    font-size: 16pt;
+    font-size: 22pt;
     font-weight: 500;
     color: #685aff;
     text-decoration: underline;
@@ -228,13 +223,13 @@ ${sandollLink}
   }
   .p-subtitle {
     font-family: 'Sandoll GtNeoCond', 'Noto Sans KR', sans-serif;
-    font-size: 5.5pt;
+    font-size: 8pt;
     line-height: 1.3;
     color: #685aff;
     opacity: 0.85;
     flex-shrink: 0;
     text-align: center;
-    margin-bottom: 2mm;
+    margin-bottom: 5mm;
   }
   .p-graph {
     flex: 0 0 40mm;
@@ -389,8 +384,6 @@ function route() {
   } else {
     showView("view-swipe");
   }
-
-  document.body.classList.add("js-ready");
 }
 
 // ── reset ───────────────────────────────
@@ -404,12 +397,10 @@ fetch(CSV_URL)
     const allRows = parseCSV(text);
     dataRows = allRows.filter((r) => r[KEYS.project]);
 
-    // image
     Object.entries(CARD_IMAGES).forEach(([idx, src]) => {
       if (dataRows[idx]) dataRows[idx]["_image"] = src;
     });
 
-    // swipe subset
     swipeRows = dataRows
       .map((row, i) => ({ ...row, _dataIdx: i }))
       .sort(() => Math.random() - 0.5)
@@ -424,11 +415,6 @@ fetch(CSV_URL)
     setTimeout(readyLoadingScreen, 300);
 
     document.title = allRows[0]?.[KEYS.title] || "Archive of Has-Beens";
-
-    const uniqueCats = [
-      ...new Set(dataRows.map((r) => r[KEYS.cat]).filter(Boolean)),
-    ];
-    buildCatColorMap(uniqueCats);
 
     renderDeck();
 

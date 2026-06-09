@@ -803,22 +803,6 @@
   display: block;
 }
 
-.trend-x-axis {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.5rem 0 0;
-  font-size: 0.65rem;
-  font-family: var(--font-sans);
-  font-weight: var(--font-korean-weight);
-  color: rgba(240, 255, 195, 0.5);
-}
-
-.trend-peak-label {
-  font-weight: 700;
-  color: rgba(240, 255, 195, 0.8);
-}
-
 .detail-info {
   flex-shrink: 0;
   padding: 1.25rem 1.75rem 1.5rem;
@@ -936,10 +920,6 @@
 
 /* ── responsive ──────────────────────────────── */
 
-/* #grid stays 4-col at all sizes; no override needed for large screens */
-
-/* 001 nav */
-
 @media (max-width: 440px) {
   .top-nav {
     height: 3.75rem;
@@ -967,8 +947,6 @@
   #grid {
     grid-template-columns: repeat(2, 1fr);
   }
-
-  /* 002 swipe view mobile */
 
   #view-swipe {
     padding-top: 4.5rem;
