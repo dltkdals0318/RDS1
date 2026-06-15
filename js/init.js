@@ -1,5 +1,3 @@
-// ── loading helpers ───────────────────────
-
 const NICKNAME_KEY = "aohb_nickname";
 
 function hideLoadingScreen() {
@@ -52,8 +50,6 @@ function readyLoadingScreen() {
   }
 }
 
-// ── print view ──────────────────────────────────────────
-
 function getDominantYear(items) {
   const counts = {};
   items.forEach((r) => {
@@ -88,17 +84,8 @@ async function openPrintView({ dev = false } = {}) {
     : "'ClashDisplay-Variable',sans-serif";
   const nickWeight = isKoreanNick ? "400" : "500";
   const subtitleText = dominant
-    ? `님의 유행 타임캡슐은 ${dominant.year}년에 머물러 있네요!`
-    : "님의 유행 타임캡슐이 완성되었어요!";
-
-  const _majorYears = new Set([2013, 2016, 2019, 2022, 2025]);
-  const _axisItems = Array.from({ length: 14 }, (_, i) => 2013 + i)
-    .map((y) => {
-      const maj = _majorYears.has(y);
-      return `<span style="display:inline-flex;flex-direction:column;align-items:center;"><span style="display:block;width:${maj ? "0.45" : "0.25"}mm;height:2.5mm;background:#685aff;"></span><span style="font-size:5.5pt;color:#685aff;font-family:'ClashDisplay-Variable',sans-serif;font-weight:500;opacity:${maj ? "1" : "0"};margin-top:0.1mm;">${y}</span></span>`;
-    })
-    .join("");
-  const axisHTML = `<div style="position:relative;flex-shrink:0;width:100%;height:6mm;"><div style="position:absolute;top:1.25mm;left:0;right:0;height:0.5mm;background:#685aff;"></div><div style="display:flex;justify-content:space-between;padding-left:calc(2/300*100%);padding-right:calc(2/300*100%);box-sizing:border-box;">${_axisItems}</div></div>`;
+    ? `님은 ${dominant.year}년에 머물러 있네요!`
+    : "님의 타임캡슐이 완성되었어요!";
 
   const itemData = await Promise.all(
     knownItems.map(async (r) => {
@@ -111,40 +98,41 @@ async function openPrintView({ dev = false } = {}) {
       if (!series) {
         series = makeSyntheticSeries(r.row[KEYS.date], r.row[KEYS.calc]);
       }
-      return { name, series, image: r.row._image || null };
+      return { name, series };
     }),
   );
 
-  const W = 300,
-    H = 120;
+  const W = 300;
+  const GRAPH_H = 52,
+    AXIS_H = 12;
   const padL = 2,
     padR = 2,
-    padT = 10,
-    padB = 4;
+    padT = 8,
+    padB = 2;
   const plotW = W - padL - padR;
-  const plotH = H - padT - padB;
+  const plotH = GRAPH_H - padT - padB;
 
   const COLORS = [
-    "#ff3434",
-    "#ff704d",
-    "#ff9d4d",
-    "#ffd15b",
-    "#caff46",
-    "#57ff3d",
-    "#00dc30",
-    "#3dffe2",
-    "#0397ae",
-    "#3dc2ff",
-    "#5387ff",
-    "#195eff",
-    "#5d4ffa",
-    "#a650fc",
-    "#d946ef",
-    "#fe79f3",
-    "#ff3bb1",
-    "#6a6f6e",
-    "#332f2f",
-    "#19171a",
+    "#000000",
+    "#1c1c1c",
+    "#383838",
+    "#333333",
+    "#4a4a4a",
+    "#000000",
+    "#1c1c1c",
+    "#383838",
+    "#333333",
+    "#4a4a4a",
+    "#000000",
+    "#1c1c1c",
+    "#383838",
+    "#333333",
+    "#4a4a4a",
+    "#000000",
+    "#1c1c1c",
+    "#383838",
+    "#333333",
+    "#4a4a4a",
   ];
 
   const svgPaths = itemData
@@ -160,21 +148,133 @@ async function openPrintView({ dev = false } = {}) {
     })
     .join("\n");
 
-  const thumbsHTML = itemData
-    .map((item, i) => {
-      const color = COLORS[i % COLORS.length];
-      const imgSrc = item.image ? new URL(item.image, location.href).href : "";
-      const imgTag = imgSrc
-        ? `<img src="${imgSrc}" alt="" style="width:100%;height:100%;object-fit:contain;">`
-        : "";
-      return `<div style="display:flex;flex-direction:column;align-items:center;gap:0.6mm;width:13mm;flex-shrink:0;">
-      <div style="width:9mm;height:9mm;border:0.4mm solid ${color};overflow:hidden;display:flex;align-items:center;justify-content:center;background:#fff;">
-        ${imgTag}
-      </div>
-      <span class="p-thumb-name">${item.name}</span>
-    </div>`;
-    })
-    .join("");
+  const majorYears = new Set([2013, 2016, 2019, 2022, 2025]);
+  const itemPeaks = itemData.map((item, i) => {
+    const color = COLORS[i % COLORS.length];
+    const n = item.series.length;
+    let peakIdx = 0,
+      peakVal = -Infinity;
+    item.series.forEach((p, j) => {
+      if (p.value > peakVal) {
+        peakVal = p.value;
+        peakIdx = j;
+      }
+    });
+    return {
+      name: item.name,
+      color,
+      peakX: padL + (peakIdx / (n - 1)) * plotW,
+      peakYear: 2013 + Math.round((peakIdx / (n - 1)) * 13),
+    };
+  });
+  const sortedItems = [...itemPeaks].sort((a, b) => a.peakX - b.peakX);
+
+  const MM_PER_UNIT = 114.6 / W; // 148mm - 16.7mm×2 side margins
+
+  const svgAxis = [
+    `<line x1="${padL}" y1="${GRAPH_H}" x2="${W - padR}" y2="${GRAPH_H}" stroke="#000" stroke-width="0.5"/>`,
+    ...Array.from({ length: 14 }, (_, i) => {
+      const year = 2013 + i;
+      const x = (padL + (i / 13) * plotW).toFixed(1);
+      const isMaj = majorYears.has(year);
+      return [
+        `<line x1="${x}" y1="${GRAPH_H}" x2="${x}" y2="${(GRAPH_H + (isMaj ? 3.5 : 2)).toFixed(1)}" stroke="#000" stroke-width="${isMaj ? 0.5 : 0.3}"/>`,
+        isMaj
+          ? `<text x="${x}" y="${(GRAPH_H + 9).toFixed(1)}" font-size="5.5" text-anchor="${i === 0 ? "start" : "middle"}" fill="#000" font-family="sans-serif" font-weight="800">${year}</text>`
+          : "",
+      ]
+        .filter(Boolean)
+        .join("\n");
+    }),
+  ].join("\n");
+
+  const FONT_SIZE = 4.8,
+    charW = 4.1,
+    PAD_X = 1.5,
+    boxH = 7.5,
+    BOX_GAP_X = 1.5,
+    BOX_GAP_Y = 1.5,
+    GROUP_GAP = 4,
+    YEAR_LABEL_H = 8;
+
+  const yearGroups = [];
+  let lastYear = null;
+  for (const item of sortedItems) {
+    if (item.peakYear !== lastYear) {
+      yearGroups.push({ year: item.peakYear, items: [] });
+      lastYear = item.peakYear;
+    }
+    yearGroups[yearGroups.length - 1].items.push(item);
+  }
+
+  let cursorY = GRAPH_H + AXIS_H;
+  const svgDotLines = [];
+  const svgBoxEls = [];
+
+  for (const group of yearGroups) {
+    const yearX = padL + ((group.year - 2013) / 13) * plotW;
+    const isRTL = group.year >= 2023;
+    const anchorX = Math.max(padL + 1, Math.min(W - padR - 1, yearX));
+
+    svgDotLines.push(
+      `<line x1="${yearX.toFixed(1)}" y1="${(GRAPH_H + AXIS_H).toFixed(1)}" x2="${anchorX.toFixed(1)}" y2="${cursorY.toFixed(1)}" stroke="#555" stroke-width="0.7" stroke-dasharray="2 1.5"/>`,
+    );
+
+    svgBoxEls.push(
+      `<text x="${anchorX.toFixed(1)}" y="${(cursorY + YEAR_LABEL_H * 0.78).toFixed(1)}" font-size="5.5" fill="#222" font-family="sans-serif" font-weight="800" text-anchor="${isRTL ? "end" : "start"}">${group.year}</text>`,
+    );
+    cursorY += YEAR_LABEL_H;
+
+    const itemsW = group.items.map(({ name, color }) => ({
+      name,
+      color,
+      estW: name.length * charW + PAD_X * 2,
+    }));
+
+    const maxW = W - padL - padR;
+    const allRows = [];
+    let curRow = [],
+      curRowW = 0;
+    for (const item of itemsW) {
+      if (curRowW > 0 && curRowW + item.estW > maxW) {
+        allRows.push(curRow);
+        curRow = [];
+        curRowW = 0;
+      }
+      curRow.push(item);
+      curRowW += item.estW + BOX_GAP_X;
+    }
+    if (curRow.length) allRows.push(curRow);
+
+    let rowY = cursorY;
+    for (const row of allRows) {
+      const rowTotalW = row.reduce(
+        (s, it) => s + it.estW + BOX_GAP_X,
+        -BOX_GAP_X,
+      );
+      let rowX = isRTL
+        ? Math.max(padL, anchorX - rowTotalW)
+        : Math.max(padL, Math.min(anchorX, W - padR - rowTotalW));
+
+      for (const { name, color, estW } of row) {
+        svgBoxEls.push(
+          [
+            `<rect x="${rowX.toFixed(1)}" y="${rowY.toFixed(1)}" width="${estW.toFixed(1)}" height="${boxH.toFixed(1)}" fill="#f0ffc3" stroke="${color}" stroke-width="0.9" rx="0.8"/>`,
+            `<text x="${(rowX + PAD_X).toFixed(1)}" y="${(rowY + boxH * 0.72).toFixed(1)}" fill="${color}" font-size="${FONT_SIZE}" font-family="'Noto Sans KR',sans-serif" font-weight="700">${name}</text>`,
+          ].join("\n"),
+        );
+        rowX += estW + BOX_GAP_X;
+      }
+      rowY += boxH + BOX_GAP_Y;
+    }
+
+    cursorY = rowY - BOX_GAP_Y + GROUP_GAP;
+  }
+
+  const H = cursorY + 2;
+  const svgHeightMM = (H * MM_PER_UNIT).toFixed(1);
+
+  const svgLabels = svgDotLines.join("\n") + "\n" + svgBoxEls.join("\n");
 
   const baseURL = new URL(".", location.href).href;
   const clashCSS = `${baseURL}css/clash-display.css`;
@@ -190,7 +290,7 @@ async function openPrintView({ dev = false } = {}) {
 <link rel="stylesheet" href="${clashCSS}">
 ${sandollLink}
 <style>
-  @page { size: 170mm 115mm; margin: 5mm; }
+  @page { size: 105mm 148mm; margin: 0; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html {
     min-height: 100vh;
@@ -200,84 +300,75 @@ ${sandollLink}
     background: #ccc;
   }
   body {
-    width: 160mm;
+    width: 148mm;
     height: 105mm;
     background: #f0ffc3;
     display: flex;
     flex-direction: column;
     gap: 0;
     overflow: hidden;
-    padding: 4mm;
+    padding: 8mm 16.7mm 5mm;
   }
   .p-title {
     font-family: 'ClashDisplay-Variable', sans-serif;
-    font-size: 22pt;
+    font-size: 17pt;
     font-weight: 500;
-    color: #685aff;
+    color: #000;
     text-decoration: underline;
     letter-spacing: 0.02em;
-    text-align: center;
+    text-align: right;
     flex-shrink: 0;
     line-height: 1.1;
-    margin-bottom: 2mm;
+    margin-bottom: 1mm;
+    transform: rotate(8deg);
+    transform-origin: center;
   }
   .p-subtitle {
     font-family: 'Sandoll GtNeoCond', 'Noto Sans KR', sans-serif;
-    font-size: 8pt;
+    font-size: 7pt;
     line-height: 1.3;
-    color: #685aff;
-    opacity: 0.85;
+    color: #000;
     flex-shrink: 0;
-    text-align: center;
-    margin-bottom: 5mm;
+    text-align: right;
+    margin-bottom: 7mm;
+    transform: rotate(8deg);
+    transform-origin: center;
   }
   .p-graph {
-    flex: 0 0 40mm;
-    height: 40mm;
+    flex: 0 0 ${svgHeightMM}mm;
+    height: ${svgHeightMM}mm;
     width: 100%;
     overflow: hidden;
+    margin-top: 0;
   }
   .p-graph svg { width: 100%; height: 100%; display: block; }
-  .p-thumbs {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2mm;
-    align-content: flex-start;
-    flex: 1;
-    overflow: hidden;
-    margin-top: 1.5mm;
-  }
-  .p-thumb-name {
-    font-family: 'Sandoll GtNeoCond', 'Noto Sans KR', sans-serif;
-    font-size: 3.8pt;
-    color: #333;
-    text-align: center;
-    word-break: keep-all;
-    line-height: 1.25;
-    width: 13mm;
-  }
   @media print {
     html { background: none; display: block; }
     body {
-      width: 160mm;
+      width: 148mm;
       height: 105mm;
-      padding: 4mm;
+      padding: 5mm 16.7mm;
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
+      position: absolute;
+      top: 0;
+      left: 0;
+      transform: rotate(-90deg) translateX(-148mm);
+      transform-origin: top left;
     }
   }
 </style>
 </head>
 <body>
-  <div class="p-title"><span style="font-family:${nickFont};font-weight:${nickWeight};">${nickname}</span>'s Trend Time Capsule</div>
+  <div class="p-title"><span style="font-family:${nickFont};font-weight:${nickWeight};">${nickname}</span>'s time.zip</div>
   <div class="p-subtitle"><span style="font-family:${nickFont};font-weight:${nickWeight};">${nickname}</span>${subtitleText}</div>
   <div class="p-graph">
     <svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
       ${svgPaths}
+      ${svgAxis}
+      ${svgLabels}
     </svg>
   </div>
-  ${axisHTML}
-  <div class="p-thumbs">${thumbsHTML}</div>
   <script>
     window.addEventListener('load', () => setTimeout(() => window.print(), 500));
   </script>
@@ -289,8 +380,6 @@ ${sandollLink}
   popup.document.close();
 }
 
-// ── archive info overlay ─────────────────
-
 function showArchiveInfoOverlay() {
   if (document.getElementById("archive-info-overlay")) return;
 
@@ -299,8 +388,8 @@ function showArchiveInfoOverlay() {
   overlay.className = "archive-info-overlay";
   overlay.innerHTML = `
     <div class="archive-info-card">
-      <h2 class="archive-info-card-title">Time Capsule Archive</h2>
-      <p class="archive-info-body">다운로드 버튼을 눌러 나의 타임캡슐 아카이브를 저장해보세요!<br>당신이 어느 시대의 유행을 가장 많이 간직하고 있는지 보여드립니다.</p>
+      <h2 class="archive-info-card-title">Time Archive</h2>
+      <p class="archive-info-body">다운로드 버튼을 눌러 나의 타임캡슐을 저장해보세요!<br>당신이 어느 시대의 유행을 가장 많이 간직하고 있는지 보여드립니다.</p>
       <p class="archive-info-dismiss">(click to dismiss)</p>
     </div>
   `;
@@ -312,8 +401,6 @@ function showArchiveInfoOverlay() {
   document.body.appendChild(overlay);
 }
 
-// ── how-to-play inline card ───────────────
-
 function showHowToPlayCard() {
   const deck = document.getElementById("swipe-deck");
   if (!deck || deck.querySelector(".htp-overlay-card")) return;
@@ -323,7 +410,7 @@ function showHowToPlayCard() {
   card.style.zIndex = "10";
   card.innerHTML = `
     <h2 class="htp-overlay-title title">Info</h2>
-    <p class="htp-overlay-desc">유행 타임캡슐은 인터넷이 반짝 묻어둔 유행들을 직접 꺼내보는 웹사이트입니다. 구글트렌드에서 솟았다 가라앉은 '산모형' 유행만 골라 카드에 담았습니다. 아는 유행과 모르는 유행을 나누며, 나만의 유행 타임캡슐을 만들어보세요!</p>
+    <p class="htp-overlay-desc">Time Zipper는 인터넷이 반짝 묻어둔 유행들을 다시 꺼내 맞물려보는 웹사이트입니다. 구글트렌드에서 솟았다 가라앉은 '산모형' 유행만 골라 카드에 담았습니다. 아는 유행과 모르는 유행을 나누며, 나만의 타임캡슐을 만들어보세요!</p>
     <p class="htp-overlay-enter">(click to dismiss)</p>
   `;
 
@@ -341,8 +428,6 @@ document
   .querySelector(".archive-save-btn")
   .addEventListener("click", openPrintView);
 
-// ── nav click animation ───────────────
-
 function attachTiltClick(el) {
   el.addEventListener("click", () => {
     el.classList.remove("nav-tilt-active");
@@ -355,8 +440,6 @@ function attachTiltClick(el) {
 }
 
 attachTiltClick(document.getElementById("how-to-play-btn"));
-
-// ── router ───────────────────────────────
 
 function showView(id) {
   document.querySelectorAll(".view").forEach((v) => (v.hidden = true));
@@ -386,8 +469,6 @@ function route() {
   }
 }
 
-// ── reset ───────────────────────────────
-
 fetch(CSV_URL)
   .then((res) => {
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -414,13 +495,12 @@ fetch(CSV_URL)
     });
     setTimeout(readyLoadingScreen, 300);
 
-    document.title = allRows[0]?.[KEYS.title] || "Archive of Has-Beens";
+    document.title = allRows[0]?.[KEYS.title] || "Time Zipper";
 
     renderDeck();
 
     initArchive();
 
-    // 스프레드시트 프로젝트명 ↔ TREND_DATA_MAP 매칭 진단
     const mapKeys = Object.keys(TREND_DATA_MAP);
     const sheetNames = dataRows.map((r) => r[KEYS.project]).filter(Boolean);
     const matched = sheetNames.filter((n) => TREND_DATA_MAP[n]);
@@ -475,8 +555,6 @@ fetch(CSV_URL)
         데이터 로드 실패.
       </p>`;
   });
-
-// ── dev keyboard shortcuts (1~5) ─────────
 
 document.addEventListener("keydown", (e) => {
   const tag = document.activeElement.tagName;

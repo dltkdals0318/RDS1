@@ -9,7 +9,7 @@ const KEYS = {
   link: "UL-Link",
 };
 
-const SWIPE_DECK_SIZE = 20;
+const SWIPE_DECK_SIZE = 15;
 
 let dataRows = [];
 let swipeRows = [];
