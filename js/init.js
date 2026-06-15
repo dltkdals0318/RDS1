@@ -84,7 +84,7 @@ async function openPrintView({ dev = false } = {}) {
     : "'ClashDisplay-Variable',sans-serif";
   const nickWeight = isKoreanNick ? "400" : "500";
   const subtitleText = dominant
-    ? `님은 ${dominant.year}년에 머물러 있네요!`
+    ? `님의 타임캡슐은 ${dominant.year}년에 머물러 있네요!`
     : "님의 타임캡슐이 완성되었어요!";
 
   const itemData = await Promise.all(
