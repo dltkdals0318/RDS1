@@ -316,11 +316,11 @@ ${sandollLink}
     color: #000;
     text-decoration: underline;
     letter-spacing: 0.02em;
-    text-align: right;
+    text-align: left;
     flex-shrink: 0;
     line-height: 1.1;
     margin-bottom: 1mm;
-    transform: rotate(8deg);
+    transform: rotate(-8deg);
     transform-origin: center;
   }
   .p-subtitle {
@@ -329,9 +329,9 @@ ${sandollLink}
     line-height: 1.3;
     color: #000;
     flex-shrink: 0;
-    text-align: right;
+    text-align: left;
     margin-bottom: 7mm;
-    transform: rotate(8deg);
+    transform: rotate(-8deg);
     transform-origin: center;
   }
   .p-graph {
